@@ -5,3 +5,4 @@ This is the [Bookdown](https://github.com/rstudio/bookdown) source repo for the 
 * LeanPub page: <https://leanpub.com/masteringdfsanalytics>
 * Code of conduct: <https://github.com/znmeb/mastering-dfs-analytics-bookdown/blob/master/CONDUCT.md>
 * Issues/Bugs/Feature requests/Comments: <https://github.com/znmeb/mastering-dfs-analytics-bookdown/issues/new>
+* IndieWebCamp: <http://indiewebcamp.com/>
