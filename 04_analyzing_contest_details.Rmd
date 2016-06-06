@@ -1,0 +1,11 @@
+# Analyzing Contest Details
+
+## Downloading and cleaning the data
+
+### Downloading contest details from FanDuel {#downloading-contest-details-from-fanduel .unnumbered}
+
+### Downloading contest details from DraftKings {#downloading-contest-details-from-draftkings .unnumbered}
+
+## Cash game probabilities and expectations
+
+## Tournament / GPP probabilities and expectations

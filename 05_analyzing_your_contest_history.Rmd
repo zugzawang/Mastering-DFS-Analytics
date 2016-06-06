@@ -1,0 +1,30 @@
+# Analyzing Your FanDuel and DraftKings Contest History
+
+## Downloading and cleaning the data
+
+
+### Downloading contest history from FanDuel
+
+-   Log in to FanDuel.
+
+-   Select the ‘History’ button.
+
+-   Press the ‘Download as CSV’ button.
+
+-   Save the CSV file in your ‘Downloads’ folder.
+
+### Downloading contest history from DraftKings
+
+-   Log in to DraftKings.
+
+-   Select ‘My Contests’ and then ‘History’.
+
+-   Click the ‘Download Entry History’ link.
+
+-   Save the CSV file in your ‘Downloads’ folder.
+
+## Cash game probabilities and expectations
+
+## Logistic regression plots
+
+## Fantasy point and quantile rank density plots

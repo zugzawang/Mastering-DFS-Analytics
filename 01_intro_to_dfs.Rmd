@@ -1,0 +1,84 @@
+# How Daily Fantasy Sports Contests Work
+
+> “When I use a word,’ Humpty Dumpty said in rather a scornful tone, ‘it
+> means just what I choose it to mean — neither more nor less.’
+>
+> ’The question is,’ said Alice, ‘whether you can make words mean so
+> many different things.’
+>
+> ’The question is,’ said Humpty Dumpty, ‘which is to be master — that’s
+> all.’’
+>
+> - Lewis Carroll, Through the Looking Glass
+> <http://www.goodreads.com/quotes/12608-when-i-use-a-word-humpty-dumpty-said-in-rather>
+
+As I noted in the introduction, I’m a mathematician, as was Lewis
+Carroll. One sometimes-infuriating habits we mathematicians have is our
+wish to standardize words to mean just what we choose them to mean —
+neither more nor less.
+
+So, in this book, when I use the word “player”, it refers to real-world
+athletes or their fantasy counterparts. “Game” refers to a real-world
+game, for example, the Super Bowl. And the word “contest” refers to
+fantasy sports contests; “contestant” refers to a person who enters
+fantasy sports contests.
+
+Daily fantasy contests work like this:
+
+1.  Contestants sign up on a DFS site.
+
+2.  Most sites have both free contests (“freerolls”) and paid ones.
+    Contestants who wish to play the paid contests must deposit funds.
+
+3.  Once a contestant is signed up, it’s off to the *Lobby*.
+
+For a newcomer, the lobby can be quite bewildering, even though it will
+usually have widgets to sort and filter all the available contests.
+There are usually
+
+-   multiple sports,
+
+-   entry fees ranging from freerolls up to thousands of dollars,
+
+-   payout structures ranging from simple head-to-head contests up to
+    multi-player / multi-entry ones with cash or tickets to other
+    contests as prizes, and
+
+-   sizes ranging from two contestants up to *hundreds of thousands*.
+
+Contests cover at least two real-world games, usually more. Once a
+contestant chooses a contest to enter, they draft a *lineup* with
+players from two or more games. The structure of a lineup usually
+mirrors that of a real-world team. For example, a major league baseball
+DFS lineup will usually have one or two pitchers, a catcher, four
+infielders and three outfielders.
+
+The most common form of a DFS contest is the *salary cap* draft. Each
+player has a salary, usually given in thousands of dollars, and the sum
+of the salaries for drafted players must not exceed the *salary cap*.
+
+Once all the contestants have drafted their lineups and the real world
+games start, fantasy players accrue points as their real-world
+counterparts play. For example
+
+-   Pitchers get points for innings pitched and strikeouts.
+
+-   Pitchers lose points for giving up walks, hits and runs.
+
+-   Batters get points for walks, hits, homers, RBIs and stolen bases.
+
+-   Batters lose points if they get caught stealing a base.
+
+-   Basketball players get points for baskets, assists, rebounds,
+    steals, blocked shots, double-doubles, triple-doubles.
+
+-   Basketball players lose points for turnovers.
+
+When all the real-world games’ results are final, the DFS contestants’
+scores are tallied. The contestants are then ranked. The payouts, if
+any, are decided by where a contestant ranks.
+
+For example, in a \$1 50/50 contest with 300 contestants, each
+contestant pays a \$1 entry fee. At the end of the contest, the
+highest-ranking 150 contestants win \$1.80 and the rest lose their
+dollar.

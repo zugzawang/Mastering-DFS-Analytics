@@ -1,0 +1,5 @@
+# How Projection Systems Work
+
+## Projecting game scores with mvglmmRank
+
+## Projecting player fantasy points with glm

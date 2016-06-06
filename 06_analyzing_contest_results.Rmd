@@ -1,0 +1,11 @@
+# Analyzing DraftKings Contest Standings
+
+## Downloading the contest standings CSV file
+
+## Adding the contest information
+
+## Adding the payout data
+
+## Parsing the entry names
+
+## Analyzing the results
