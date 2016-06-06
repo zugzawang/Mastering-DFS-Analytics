@@ -11,7 +11,7 @@ link-citations: yes
 ---
 
 # About the book
-Mastering DFS Amalytics is a data-driven program to improve your daily fantasy sports results. You'll learn
+_Mastering DFS Analytics_ is a data-driven program to improve your daily fantasy sports results. You'll learn
 
 * The math you need to make informed money management decisions,
 * How projection systems and optimizers work,
@@ -19,7 +19,7 @@ Mastering DFS Amalytics is a data-driven program to improve your daily fantasy s
 
 and much more.
 
-Written by an applied mathematician, Mastering DFS Analytics will give you contest-tested tools. In addition to the ebook, you get
+Written by an applied mathematician, _Mastering DFS Analytics_ will give you contest-tested tools. In addition to the ebook, you get
 
 * Software to manage your data and workflow,
 * Membership on a private mailing list for readers,
