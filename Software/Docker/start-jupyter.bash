@@ -8,4 +8,4 @@ rm -f ~/.ipython/profile_default/pid/*.pid
 
 source $VIRTUALENVWRAPPER_SCRIPT
 workon jupyter
-jupyter notebook --port=8888 --ip=0.0.0.0 --no-browser
+jupyter notebook --port=7777 --ip=0.0.0.0 --no-browser
