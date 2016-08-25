@@ -11,8 +11,8 @@ export LTRIM='s;^.*href=";;'
 export RTRIM='s;amd64.deb.*$;amd64.deb;'
 export STABLE_SERVER=`${STABLE}|${AMD64}|grep -i server|grep -v pro|sed ${LTRIM}|sed ${RTRIM}`
 export PREVIEW_SERVER=`${PREVIEW}|${AMD64}|grep -i server|grep -v pro|sed ${LTRIM}|sed ${RTRIM}`
-#export SERVER=${STABLE_SERVER}
-export SERVER=${PREVIEW_SERVER}
+export SERVER=${STABLE_SERVER}
+#export SERVER=${PREVIEW_SERVER}
 export PACKAGE=`echo ${SERVER}|sed 's;^.*rstudio-;rstudio-;'`
 
 # get into neutral territory, since we're root
