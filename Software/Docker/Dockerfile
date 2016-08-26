@@ -44,12 +44,18 @@ RUN apt-get update \
   libssl-dev \
   libxml2-dev \
   libxslt1-dev \
+  pandoc \
+  pandoc-citeproc \
   pkg-config \
   python3-dev \
   python3-virtualenv \
   r-base \
   r-base-dev \
   sudo \
+  texlive-fonts-recommended \
+  texlive-latex-base \
+  texlive-latex-extra \
+  texlive-latex-recommended  \
   vim-nox \
   virtualenvwrapper \
   wget \
