@@ -1,2 +1,2 @@
-docker pull docker.io/znmeb/mastering-dfs-analytics:latest
+docker pull znmeb/mastering-dfs-analytics:latest
 docker images

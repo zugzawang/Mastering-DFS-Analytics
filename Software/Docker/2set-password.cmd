@@ -3,8 +3,8 @@ docker run \
   --tty \
   --user=root \
   --name=dfstools \
-  docker.io/znmeb/mastering-dfs-analytics:latest \
+  znmeb/mastering-dfs-analytics:latest \
   passwd dfstools
-docker commit dfstools docker.io/znmeb/mastering-dfs-analytics:latest
+docker commit dfstools znmeb/mastering-dfs-analytics:latest
 docker rm dfstools
 docker images
