@@ -6,6 +6,5 @@
 # get rid of left-over PID files if any
 rm -f ~/.ipython/profile_default/pid/*.pid
 
-source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-workon jupyter
+source ~/.virtualenvs/jupyter/bin/activate
 jupyter notebook --port=7777 --ip=0.0.0.0 --no-browser
