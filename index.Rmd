@@ -25,7 +25,9 @@ Written by an applied mathematician, _Mastering DFS Analytics_ will give you con
 * Membership on a private mailing list for readers,
 * Leanpub's 100% Happiness Guarantee
 
-Comments? Questions? <a href="https://twitter.com/znmeb_dfs" rel="me">\@znmeb_dfs on Twitter</a>
+## About the Indie Web
+
+Comments? Questions? [Tweet to \@znmeb_dfs](https://twitter.com/znmeb_dfs)
 
 ----------
 
