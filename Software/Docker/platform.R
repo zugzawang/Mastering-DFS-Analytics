@@ -18,5 +18,5 @@ install.packages(c(
   "tidyr",
   "uuid"),
   quiet = TRUE)
-devtools::install_github("IRdisplay/IRdisplay", build_vignettes = TRUE)
+devtools::install_github("IRkernel/IRdisplay", build_vignettes = TRUE)
 devtools::install_github("IRkernel/IRkernel", build_vignettes = TRUE)
