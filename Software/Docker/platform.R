@@ -2,14 +2,21 @@
 # License: AGPL-3.0
 
 install.packages(c(
+  "brew",
   "broom",
+  "crayon",
   "devtools",
   "dplyr",
+  "evaluate",
   "ggplot2",
   "IRdisplay",
   "pbdZMQ",
+  "praise",
   "readr",
   "readxl",
-  "tidyr"),
+  "roxygen2",
+  "testthat",
+  "tidyr",
+  "uuid"),
   quiet = TRUE)
 devtools::install_github("IRkernel/IRkernel", build_vignettes = TRUE)
