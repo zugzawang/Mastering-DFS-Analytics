@@ -53,6 +53,7 @@ RUN apt-get update \
   r-base-dev \
   sudo \
   texlive-fonts-recommended \
+  texlive-generic-recommended \
   texlive-latex-base \
   texlive-latex-extra \
   texlive-latex-recommended  \
