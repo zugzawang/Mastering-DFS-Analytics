@@ -13,6 +13,7 @@ install.packages(c(
   "praise",
   "readr",
   "readxl",
+  "repr",
   "roxygen2",
   "testthat",
   "tidyr",
