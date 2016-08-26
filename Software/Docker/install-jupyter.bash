@@ -4,7 +4,7 @@
 # License: AGPL-3
 
 # Jupyter itself
-source ${VIRTUALENVWRAPPER_SCRIPT}
+source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 rmvirtualenv jupyter
 mkvirtualenv -p /usr/bin/python3 jupyter
 workon jupyter
