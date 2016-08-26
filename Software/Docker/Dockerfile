@@ -45,10 +45,13 @@ RUN apt-get update \
   libxml2-dev \
   libxslt1-dev \
   pkg-config \
+  python3-dev \
+  python3-virtualenv \
   r-base \
   r-base-dev \
   sudo \
   vim-nox \
+  virtualenvwrapper \
   wget \
   && apt-file update \
   && apt-get clean
@@ -67,12 +70,9 @@ COPY Rprofile.site /etc/R/
 # set up two-job makes for R packages
 RUN sed -i "s;^MAKE.*$;MAKE='make -j 2';" /etc/R/Renviron
 
-# fetch the install and start scripts
-COPY *.bash /usr/local/src/
-RUN chmod +x /usr/local/src/*.bash
-
-# install RStudio Server
-RUN /usr/local/src/install-rstudio-server.bash
+# fetch the RStudio Server install and start scripts
+COPY *rstudio-server.bash /usr/local/src/
+RUN chmod +x /usr/local/src/*rstudio-server.bash
 
 # update system library packages
 RUN R -e "update.packages(ask = FALSE, quiet = TRUE)"
@@ -85,6 +85,7 @@ RUN useradd -c "DFS Tools" -u 1000 -G sudo -s /bin/bash -m dfstools
 RUN mkdir -p /home/dfstools/Projects
 RUN mkdir -p /home/dfstools/Scripts
 COPY *.R /home/dfstools/Scripts/
+COPY *jupyter.bash /home/dfstools/Scripts/
 RUN chown -R dfstools:dfstools /home/dfstools/
 
 # install new R packages in 'dfstools' personal library
@@ -97,7 +98,10 @@ RUN R --no-save < `R RHOME`/etc/Rprofile.site
 # install platform tools
 RUN R --no-save < /home/dfstools/Scripts/platform.R
 
+# install Jupyter
+RUN /home/dfstools/Scripts/install-jupyter.bash
+
 # set up server run-time
 WORKDIR /home/dfstools
-EXPOSE 7878
-CMD /usr/local/src/start-rstudio-server.bash
+EXPOSE 7777
+CMD /home/dfstools/Scripts/start-jupyter.bash
