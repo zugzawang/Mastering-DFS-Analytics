@@ -27,7 +27,7 @@ Written by an applied mathematician, _Mastering DFS Analytics_ will give you con
 
 ## About the Indie Web
 
-Comments? Questions? [Tweet to \@znmeb_dfs](https://twitter.com/znmeb_dfs)
+Comments? Questions? <a href="https://twitter.com/znmeb_dfs" rel="me">\@znmeb_dfs on Twitter</a>
 
 ----------
 
