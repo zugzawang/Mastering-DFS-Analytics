@@ -5,7 +5,7 @@ docker run \
   --name=dfstools \
   --publish=7777:7777 \
   docker.io/znmeb/mastering-dfs-analytics:latest \
-  /usr/local/src/start-rstudio-server.bash
+  /home/dfstools/Scripts/start-jupyter.bash
 docker commit dfstools docker.io/znmeb/mastering-dfs-analytics:latest
 docker rm dfstools
 docker images
