@@ -9,6 +9,7 @@ install.packages(c(
   "dplyr",
   "evaluate",
   "ggplot2",
+  "googlesheets",
   "pbdZMQ",
   "praise",
   "readr",
