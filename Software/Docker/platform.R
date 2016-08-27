@@ -15,6 +15,7 @@ install.packages(c(
   "readxl",
   "repr",
   "roxygen2",
+  "RSQLite",
   "testthat",
   "tidyr",
   "uuid"),
