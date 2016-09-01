@@ -8,6 +8,7 @@ install.packages(c(
   "devtools",
   "dplyr",
   "evaluate",
+  "forcats",
   "ggplot2",
   "googlesheets",
   "pbdZMQ",
