@@ -37,6 +37,7 @@ RUN apt-get update \
   && apt-get install -qqy --no-install-recommends \
   apt-file \
   bash-completion \
+  freeglut3-dev \
   gdebi-core \
   git \
   libcurl4-openssl-dev \
