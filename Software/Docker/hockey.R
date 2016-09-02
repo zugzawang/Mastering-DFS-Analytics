@@ -4,3 +4,4 @@
 install.packages(c(
   "nhlscrapr"),
   quiet = TRUE)
+print("Install finished")

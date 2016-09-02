@@ -8,3 +8,4 @@ install.packages(c(
   "PlayerRatings",
   "SportsAnalytics"),
   quiet = TRUE)
+print("Install finished")
