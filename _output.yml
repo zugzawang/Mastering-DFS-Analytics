@@ -1,11 +1,1 @@
-bookdown::html_book:
-  includes:
-    in_header: webmention.html
-  split_by: section+number
-  toc: yes
-  css: toc.css
-bookdown::pdf_book:
-  includes:
-    in_header: preamble.tex
-  latex_engine: xelatex
-  citation_package: natbib
+_output.yml.gitbook
