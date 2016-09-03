@@ -3,6 +3,6 @@
 .RData
 .*.Rnb.cached
 _publish.R
-_book
+*_book
 _bookdown_files
 dfstools.rds
