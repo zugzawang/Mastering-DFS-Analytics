@@ -1,6 +1,6 @@
 #! /bin/bash
 
-for i in gitbook bootstrap tufte
+for i in bootstrap tufte gitbook
 do
   ln -sf _output.yml.${i} _output.yml
   ln -sf index.Rmd.${i} index.Rmd
@@ -8,4 +8,3 @@ do
   rm -fr ${i}_book
   cp -rp _book ${i}_book
 done
-
