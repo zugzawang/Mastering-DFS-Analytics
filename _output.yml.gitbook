@@ -1,4 +1,5 @@
 bookdown::gitbook:
+  split_by: chapter
   includes:
     in_header: webmention.html
   css: style.css

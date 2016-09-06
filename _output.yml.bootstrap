@@ -1,4 +1,5 @@
 bookdown::html_book:
+  split_by: chapter
   includes:
     in_header: webmention.html
   toc: yes
