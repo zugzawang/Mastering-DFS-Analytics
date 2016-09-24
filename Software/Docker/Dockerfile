@@ -116,4 +116,5 @@ RUN /home/dfstools/Scripts/install-jupyter.bash
 # set up server run-time
 WORKDIR /home/dfstools
 EXPOSE 7777
+EXPOSE 7557
 CMD /home/dfstools/Scripts/start-jupyter.bash
