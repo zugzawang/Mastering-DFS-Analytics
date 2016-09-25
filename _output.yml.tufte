@@ -1,11 +1,11 @@
+bookdown::tufte_book2:
+  includes:
+    in_header: preamble.tex
+  latex_engine: xelatex
+  citation_package: natbib
 bookdown::tufte_html_book:
   split_by: chapter
   toc: yes
   css: toc.css
   includes:
     in_header: webmention.html
-bookdown::tufte_book2:
-  includes:
-    in_header: preamble.tex
-  latex_engine: xelatex
-  citation_package: natbib
