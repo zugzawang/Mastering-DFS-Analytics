@@ -82,8 +82,8 @@ COPY Rprofile.site /etc/R/
 RUN sed -i "s;^MAKE.*$;MAKE='make -j 2';" /etc/R/Renviron
 
 # fetch the RStudio Server install and start scripts
-COPY *rstudio-server.bash /usr/local/src/
-RUN chmod +x /usr/local/src/*rstudio-server.bash
+COPY *rstudio-*.bash /usr/local/src/
+RUN chmod +x /usr/local/src/*rstudio-*.bash
 
 # update system library packages
 RUN R -e "update.packages(ask = FALSE, quiet = TRUE)"
@@ -110,10 +110,8 @@ RUN R --no-save < `R RHOME`/etc/Rprofile.site
 # install platform tools
 RUN R --no-save < /home/dfstools/Scripts/platform.R
 
-# install Jupyter
-RUN /home/dfstools/Scripts/install-jupyter.bash
-
 # set up server run-time
 WORKDIR /home/dfstools
 EXPOSE 7777
-CMD /home/dfstools/Scripts/start-jupyter.bash
+EXPOSE 7878
+CMD /bin/bash
