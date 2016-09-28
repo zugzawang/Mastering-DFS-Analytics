@@ -45,6 +45,7 @@ RUN apt-get update \
   libssl-dev \
   libxml2-dev \
   libxslt1-dev \
+  lsb-release \
   pandoc \
   pandoc-citeproc \
   pkg-config \
