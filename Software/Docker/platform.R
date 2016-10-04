@@ -2,6 +2,7 @@
 # License: AGPL-3.0
 
 install.packages(c(
+  "bookdown",
   "devtools",
   "googlesheets",
   "pbdZMQ",
