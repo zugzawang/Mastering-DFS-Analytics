@@ -33,10 +33,6 @@ RUN echo 'deb http://cran.rstudio.com/bin/linux/ubuntu xenial/' \
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
 
 # Install Ubuntu packages
-## Git LFS repo
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-
-## main installer
 RUN apt-get update \
   && apt-get install -qqy --no-install-recommends \
   apt-file \
@@ -44,7 +40,6 @@ RUN apt-get update \
   freeglut3-dev \
   gdebi-core \
   git \
-  git-lfs \
   libcurl4-openssl-dev \
   libssh2-1-dev \
   libssl-dev \
@@ -68,6 +63,8 @@ RUN apt-get update \
   vim-nox \
   virtualenvwrapper \
   wget \
+  && curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash \
+  && apt-get install git-lfs \
   && git lfs install \
   && apt-file update \
   && apt-get clean
