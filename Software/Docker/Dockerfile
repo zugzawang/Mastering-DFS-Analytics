@@ -114,6 +114,10 @@ RUN R --no-save < `R RHOME`/etc/Rprofile.site
 # install platform tools
 RUN R --no-save < /home/dfstools/Scripts/platform.R
 
+# clone the bookdown-demo repo
+WORKDIR /home/dfstools/Projects
+RUN git clone https://github.com/rstudio/bookdown-demo.git
+
 # set up server run-time
 WORKDIR /home/dfstools
 EXPOSE 7777
