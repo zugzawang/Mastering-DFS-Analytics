@@ -6,5 +6,6 @@
 echo "Stopping existing RStudio Server if any"
 rstudio-server stop
 echo "Starting RStudio Server undaemonized"
+echo "Ctl-C to stop"
 /usr/lib/rstudio-server/bin/rserver --server-daemonize=0
 echo "Exiting - please wait"
