@@ -4,6 +4,7 @@
 install.packages(c(
   "bookdown",
   "devtools",
+  "flexdashboard",
   "googlesheets",
   "pbdZMQ",
   "repr",
