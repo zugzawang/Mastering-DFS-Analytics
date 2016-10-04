@@ -82,9 +82,12 @@ COPY Rprofile.site /etc/R/
 # set up two-job makes for R packages
 RUN sed -i "s;^MAKE.*$;MAKE='make -j 2';" /etc/R/Renviron
 
-# fetch the RStudio Server install and start scripts
-COPY *rstudio-*.bash /usr/local/src/
-RUN chmod +x /usr/local/src/*rstudio-*.bash
+# fetch the install and start scripts
+COPY \
+  *rstudio-*.bash \
+  install-texlive-full.bash \
+  /usr/local/src/
+RUN chmod +x /usr/local/src/*.bash
 
 # update system library packages
 RUN R -e "update.packages(ask = FALSE, quiet = TRUE)"
