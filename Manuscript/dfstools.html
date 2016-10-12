@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Mastering DFS Analytics</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="Mastering DFS Analytics">
+  <meta name="generator" content="bookdown <!--bookdown:version--> and GitBook 2.6.7">
+
+  <meta property="og:title" content="Mastering DFS Analytics" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Mastering DFS Analytics" />
+  
+  
+  
+
+<meta name="author" content="M. Edward (Ed) Borasky">
+
+  
+<meta name="date" content="2016-10-12">
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<!--bookdown:link_prev-->
+<!--bookdown:link_next-->
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<link rel="webmention" href="https://webmention.io/masteringdfsanalytics.com/webmention" />
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+<!--bookdown:title:start-->
+<div id="header">
+<h1 class="title">Mastering DFS Analytics</h1>
+<h4 class="author"><em>M. Edward (Ed) Borasky</em></h4>
+<h4 class="date"><em>2016-10-12</em></h4>
+</div>
+<!--bookdown:title:end-->
+
+<!--bookdown:toc:start-->
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+<!--bookdown:toc2:start-->
+<ul>
+<li><a href="#about-the-book"><span class="toc-section-number">1</span> About the book</a><ul>
+<li><a href="#about-the-indie-web"><span class="toc-section-number">1.1</span> About the Indie Web</a></li>
+</ul></li>
+<li><a href="#how-daily-fantasy-sports-contests-work"><span class="toc-section-number">2</span> How Daily Fantasy Sports Contests Work</a></li>
+<li><a href="#getting-the-software"><span class="toc-section-number">3</span> Getting the Software</a></li>
+<li><a href="#the-mathematics-you-need-to-know"><span class="toc-section-number">4</span> The Mathematics You Need to Know</a><ul>
+<li><a href="#random-variables"><span class="toc-section-number">4.1</span> Random variables</a><ul>
+<li><a href="#discrete-random-variables"><span class="toc-section-number">4.1.1</span> Discrete random variables</a></li>
+<li><a href="#continuous-random-variables"><span class="toc-section-number">4.1.2</span> Continuous random variables</a></li>
+<li><a href="#random-variables-we-see-in-dfs"><span class="toc-section-number">4.1.3</span> Random variables we see in DFS</a></li>
+</ul></li>
+<li><a href="#the-bernoulli-and-binomial-distributions"><span class="toc-section-number">4.2</span> The Bernoulli and binomial distributions</a><ul>
+<li><a href="#confidence-interval-for-p"><span class="toc-section-number">4.2.1</span> Confidence interval for <em>p</em></a></li>
+</ul></li>
+<li><a href="#expectations"><span class="toc-section-number">4.3</span> Expectations</a></li>
+<li><a href="#unfavorable-fair-and-favorable-games"><span class="toc-section-number">4.4</span> Unfavorable, fair and favorable games</a></li>
+</ul></li>
+<li><a href="#analyzing-contest-details"><span class="toc-section-number">5</span> Analyzing Contest Details</a><ul>
+<li><a href="#downloading-and-cleaning-the-data"><span class="toc-section-number">5.1</span> Downloading and cleaning the data</a><ul>
+<li><a href="#downloading-contest-details-from-fanduel">Downloading contest details from FanDuel</a></li>
+<li><a href="#downloading-contest-details-from-draftkings">Downloading contest details from DraftKings</a></li>
+</ul></li>
+<li><a href="#cash-game-probabilities-and-expectations"><span class="toc-section-number">5.2</span> Cash game probabilities and expectations</a></li>
+<li><a href="#tournament-gpp-probabilities-and-expectations"><span class="toc-section-number">5.3</span> Tournament / GPP probabilities and expectations</a></li>
+</ul></li>
+<li><a href="#analyzing-your-fanduel-and-draftkings-contest-history"><span class="toc-section-number">6</span> Analyzing Your FanDuel and DraftKings Contest History</a><ul>
+<li><a href="#downloading-and-cleaning-the-data-1"><span class="toc-section-number">6.1</span> Downloading and cleaning the data</a><ul>
+<li><a href="#downloading-contest-history-from-fanduel"><span class="toc-section-number">6.1.1</span> Downloading contest history from FanDuel</a></li>
+<li><a href="#downloading-contest-history-from-draftkings"><span class="toc-section-number">6.1.2</span> Downloading contest history from DraftKings</a></li>
+</ul></li>
+<li><a href="#cash-game-probabilities-and-expectations-1"><span class="toc-section-number">6.2</span> Cash game probabilities and expectations</a></li>
+<li><a href="#logistic-regression-plots"><span class="toc-section-number">6.3</span> Logistic regression plots</a></li>
+<li><a href="#fantasy-point-and-quantile-rank-density-plots"><span class="toc-section-number">6.4</span> Fantasy point and quantile rank density plots</a></li>
+</ul></li>
+<li><a href="#analyzing-draftkings-contest-standings"><span class="toc-section-number">7</span> Analyzing DraftKings Contest Standings</a><ul>
+<li><a href="#downloading-the-contest-standings-csv-file"><span class="toc-section-number">7.1</span> Downloading the contest standings CSV file</a></li>
+<li><a href="#adding-the-contest-information"><span class="toc-section-number">7.2</span> Adding the contest information</a></li>
+<li><a href="#adding-the-payout-data"><span class="toc-section-number">7.3</span> Adding the payout data</a></li>
+<li><a href="#parsing-the-entry-names"><span class="toc-section-number">7.4</span> Parsing the entry names</a></li>
+<li><a href="#analyzing-the-results"><span class="toc-section-number">7.5</span> Analyzing the results</a></li>
+</ul></li>
+<li><a href="#analyzing-archetypal-athletes"><span class="toc-section-number">8</span> Analyzing Archetypal Athletes</a></li>
+<li><a href="#how-projection-systems-work"><span class="toc-section-number">9</span> How Projection Systems Work</a><ul>
+<li><a href="#projecting-game-scores-with-mvglmmrank"><span class="toc-section-number">9.1</span> Projecting game scores with mvglmmRank</a></li>
+<li><a href="#projecting-player-fantasy-points-with-glm"><span class="toc-section-number">9.2</span> Projecting player fantasy points with glm</a></li>
+</ul></li>
+<li><a href="#how-optimizers-work"><span class="toc-section-number">10</span> How Optimizers Work</a><ul>
+<li><a href="#current-available-optimizers"><span class="toc-section-number">10.1</span> Current available optimizers</a></li>
+</ul></li>
+</ul>
+<!--bookdown:toc2:end-->
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mastering DFS Analytics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<!--bookdown:toc:end-->
+<!--bookdown:body:start-->
+<div id="about-the-book" class="section level1">
+<h1><span class="header-section-number">1</span> About the book</h1>
+<p><em>Mastering DFS Analytics</em> is a data-driven program to improve your daily fantasy sports results. You’ll learn</p>
+<ul>
+<li>The math you need to make informed money management decisions,</li>
+<li>How projection systems and optimizers work,</li>
+<li>How to extract valuable information from your contest history and standings,</li>
+</ul>
+<p>and much more.</p>
+<p>Written by an applied mathematician, <em>Mastering DFS Analytics</em> will give you contest-tested tools. In addition to the ebook, you get</p>
+<ul>
+<li>Software to manage your data and workflow,</li>
+<li>Membership on a private mailing list for readers,</li>
+<li>Leanpub’s 100% Happiness Guarantee</li>
+</ul>
+<div id="about-the-indie-web" class="section level2">
+<h2><span class="header-section-number">1.1</span> About the Indie Web</h2>
+<p>Comments? Questions? <a href="https://twitter.com/znmeb_dfs" rel="me">@znmeb_dfs on Twitter</a></p>
+<hr />
+<p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Mastering DFS Analytics</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://masteringdfsanalytics.com" property="cc:attributionName" rel="cc:attributionURL">M. Edward (Ed) Borasky</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+<hr />
+<p><strong><em><a href="https://leanpub.com/masteringdfsanalytics">Mastering DFS Analytics on LeanPub</a></em></strong></p>
+<!--chapter:end:index.Rmd-->
+</div>
+</div>
+<div id="how-daily-fantasy-sports-contests-work" class="section level1">
+<h1><span class="header-section-number">2</span> How Daily Fantasy Sports Contests Work</h1>
+<blockquote>
+<p>“When I use a word,’ Humpty Dumpty said in rather a scornful tone, ‘it means just what I choose it to mean — neither more nor less.’</p>
+<p>’The question is,’ said Alice, ‘whether you can make words mean so many different things.’</p>
+<p>’The question is,’ said Humpty Dumpty, ‘which is to be master — that’s all.’’</p>
+<ul>
+<li>Lewis Carroll, Through the Looking Glass <a href="http://www.goodreads.com/quotes/12608-when-i-use-a-word-humpty-dumpty-said-in-rather" class="uri">http://www.goodreads.com/quotes/12608-when-i-use-a-word-humpty-dumpty-said-in-rather</a></li>
+</ul>
+</blockquote>
+<p>As I noted in the introduction, I’m a mathematician, as was Lewis Carroll. One sometimes-infuriating habits we mathematicians have is our wish to standardize words to mean just what we choose them to mean — neither more nor less.</p>
+<p>So, in this book, when I use the word “player”, it refers to real-world athletes or their fantasy counterparts. “Game” refers to a real-world game, for example, the Super Bowl. And the word “contest” refers to fantasy sports contests; “contestant” refers to a person who enters fantasy sports contests.</p>
+<p>Daily fantasy contests work like this:</p>
+<ol style="list-style-type: decimal">
+<li><p>Contestants sign up on a DFS site.</p></li>
+<li><p>Most sites have both free contests (“freerolls”) and paid ones. Contestants who wish to play the paid contests must deposit funds.</p></li>
+<li><p>Once a contestant is signed up, it’s off to the <em>Lobby</em>.</p></li>
+</ol>
+<p>For a newcomer, the lobby can be quite bewildering, even though it will usually have widgets to sort and filter all the available contests. There are usually</p>
+<ul>
+<li><p>multiple sports,</p></li>
+<li><p>entry fees ranging from freerolls up to thousands of dollars,</p></li>
+<li><p>payout structures ranging from simple head-to-head contests up to multi-player / multi-entry ones with cash or tickets to other contests as prizes, and</p></li>
+<li><p>sizes ranging from two contestants up to <em>hundreds of thousands</em>.</p></li>
+</ul>
+<p>Contests cover at least two real-world games, usually more. Once a contestant chooses a contest to enter, they draft a <em>lineup</em> with players from two or more games. The structure of a lineup usually mirrors that of a real-world team. For example, a major league baseball DFS lineup will usually have one or two pitchers, a catcher, four infielders and three outfielders.</p>
+<p>The most common form of a DFS contest is the <em>salary cap</em> draft. Each player has a salary, usually given in thousands of dollars, and the sum of the salaries for drafted players must not exceed the <em>salary cap</em>.</p>
+<p>Once all the contestants have drafted their lineups and the real world games start, fantasy players accrue points as their real-world counterparts play. For example</p>
+<ul>
+<li><p>Pitchers get points for innings pitched and strikeouts.</p></li>
+<li><p>Pitchers lose points for giving up walks, hits and runs.</p></li>
+<li><p>Batters get points for walks, hits, homers, RBIs and stolen bases.</p></li>
+<li><p>Batters lose points if they get caught stealing a base.</p></li>
+<li><p>Basketball players get points for baskets, assists, rebounds, steals, blocked shots, double-doubles, triple-doubles.</p></li>
+<li><p>Basketball players lose points for turnovers.</p></li>
+</ul>
+<p>When all the real-world games’ results are final, the DFS contestants’ scores are tallied. The contestants are then ranked. The payouts, if any, are decided by where a contestant ranks.</p>
+<p>For example, in a $1 50/50 contest with 300 contestants, each contestant pays a $1 entry fee. At the end of the contest, the highest-ranking 150 contestants win $1.80 and the rest lose their dollar.</p>
+<!--chapter:end:01_intro_to_dfs.Rmd-->
+</div>
+<div id="getting-the-software" class="section level1">
+<h1><span class="header-section-number">3</span> Getting the Software</h1>
+<!--chapter:end:02_getting_the_software.Rmd-->
+</div>
+<div id="the-mathematics-you-need-to-know" class="section level1">
+<h1><span class="header-section-number">4</span> The Mathematics You Need to Know</h1>
+<div id="random-variables" class="section level2">
+<h2><span class="header-section-number">4.1</span> Random variables</h2>
+<p>A <em>random variable</em> (<a href="https://en.wikipedia.org/wiki/Random_variable" class="uri">https://en.wikipedia.org/wiki/Random_variable</a>) is is a variable whose value is subject to variations due to chance (i.e. randomness, in a mathematical sense). As we’ll see shortly, random variables abound in daily fantasy sports.</p>
+<p>A large part of the skill in DFS involves dealing with random variables. There isn’t room in this ebook for a complete discussion of probability theory, but there are certain parts a player absolutely must know to be successful.</p>
+<div id="discrete-random-variables" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Discrete random variables</h3>
+<p>There are two types of random variables, <em>discrete</em> and <em>continuous</em>. Discrete random variables usually represent one of a finite set of possibilities. For example, a roll of a pair of dice results in a total between 2 and 12.</p>
+<p>A discrete random variable has a <em>probability mass function</em>, which specifies the probability for each of the possible outcomes. For example, for the pair of dice, the probability mass function is</p>
+<p>probability(total = 2) = 1/36</p>
+<p>probability(total = 3) = 2/36</p>
+<p>probability(total = 4) = 3/36</p>
+<p>probability(total = 5) = 4/36</p>
+<p>probability(total = 6) = 5/36</p>
+<p>probability(total = 7) = 6/36</p>
+<p>probability(total = 8) = 5/36</p>
+<p>probability(total = 9) = 4/36</p>
+<p>probability(total = 10) = 3/36</p>
+<p>probability(total = 11) = 2/36</p>
+<p>probability(total = 12) = 1/36</p>
+</div>
+<div id="continuous-random-variables" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Continuous random variables</h3>
+<p>A <em>continuous random variable</em> can take on any value, usually a real number. For example, the heights of NBA players measured in inches would specify a continuous random variable.</p>
+<p>A continuous random variable has a probability density function. For example, the familiar standardized Gaussian “bell-shaped curve” (<a href="https://en.wikipedia.org/wiki/Normal_distribution" class="uri">https://en.wikipedia.org/wiki/Normal_distribution</a>) has the probability density function</p>
+<p><span class="math display">\[N(x)=\frac{1}{\sqrt{2\pi}}e^{-\frac{x^{2}}{2}}\]</span></p>
+</div>
+<div id="random-variables-we-see-in-dfs" class="section level3">
+<h3><span class="header-section-number">4.1.3</span> Random variables we see in DFS</h3>
+<p>Some random variables we see in daily fantasy sports:</p>
+<ul>
+<li><p>The number of fantasy points a player accrues in a game (continuous)</p></li>
+<li><p>The total fantasy points a lineup scores in a contest (continuous)</p></li>
+<li><p>The rank of a lineup among the entries in a contest (discrete)</p></li>
+<li><p>Whether the lineup cashed or not: 1 if it did, 0 if it didn’t (discrete)</p></li>
+</ul>
+</div>
+</div>
+<div id="the-bernoulli-and-binomial-distributions" class="section level2">
+<h2><span class="header-section-number">4.2</span> The Bernoulli and binomial distributions</h2>
+<p>The last entry in the list above - whether a lineup cashed or not - is an example of a <em>Bernoulli</em> random variable (<a href="https://en.wikipedia.org/wiki/Bernoulli_distribution" class="uri">https://en.wikipedia.org/wiki/Bernoulli_distribution</a>). A Bernoulli random variable has two possible outcomes, which in games we usually refer to as “win” and “lose”.</p>
+<p>To make calculations easier, we’ll use “1” for win and “0” for lose. The probability of a win is usually denoted by the letter <em><span class="math inline">\(p\)</span></em>. The probability of a loss is usually denoted by the letter <em><span class="math inline">\(q\)</span></em>; <em><span class="math inline">\(p+q=1\)</span></em> and <em><span class="math inline">\(q=1-p\)</span></em>.</p>
+<p>Bernoulli variables aren’t very interesting; we wouldn’t just enter one lineup in one contest and walk away forever. So we need a random variable that models how many times we cash over a number of contests. And that’s a <em>binomial</em> random variable (<a href="https://en.wikipedia.org/wiki/Binomial_distribution" class="uri">https://en.wikipedia.org/wiki/Binomial_distribution</a>).</p>
+<p>A binomial random variable has an underlying Bernoulli random variable with parameters <em><span class="math inline">\(p\)</span></em> and <span class="math inline">\(q\)</span>. We ask the question, “If we enter <em><span class="math inline">\(N\)</span></em> contests, what’s the probability that we win none, one, two, and so on up to <em><span class="math inline">\(N\)</span></em>?” And that’s the probability mass function for the binomial,</p>
+<p>If we know <em><span class="math inline">\(N\)</span></em> and we know <em><span class="math inline">\(p\)</span></em>, we can compute the probability of winning exactly <em><span class="math inline">\(k\)</span></em> contests out of <em><span class="math inline">\(N\)</span></em> tries. That probability is</p>
+<p><span class="math display">\[probability(wins=k)=\binom{N}{k}p^{k}q^{N-k}\]</span></p>
+<p>where <span class="math inline">\(\binom{N}{k}\)</span> is the number of combinations of <em><span class="math inline">\(N\)</span></em> things taken <em><span class="math inline">\(k\)</span></em> at a time. That’s interesting, but that doesn’t solve our problem. We know <em><span class="math inline">\(N\)</span></em> - how many contests we entered. And we know <em><span class="math inline">\(k\)</span></em> - how many of those contests we won. But we don’t know <em><span class="math inline">\(p\)</span></em>. We need to know <em><span class="math inline">\(p\)</span></em> to calculate expected values.</p>
+<p>It turns out we can estimate <em><span class="math inline">\(p\)</span></em> easily. The estimate of <em><span class="math inline">\(p\)</span></em> is just</p>
+<p><span class="math display">\[p_{est}=\frac{k}{N}\]</span></p>
+<p>and</p>
+<p><span class="math display">\[q_{est}=1-p_{est}\]</span></p>
+<p>So if I entered 100 50/50 contests and cashed 60 of them, the estimate of <em>p</em> is 0.6 and the estimate of <em>q</em> is 0.4.</p>
+<div id="confidence-interval-for-p" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Confidence interval for <em>p</em></h3>
+<p>Before we move on to expectations, there’s one more tool we’ll need. It turns out that not only can we estimate <em><span class="math inline">\(p\)</span></em>, we can compute a <em>confidence interval</em> for <em><span class="math inline">\(p\)</span></em> (<a href="https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval" class="uri">https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval</a>).</p>
+<p>We want to say, “there’s a 95% probability that the value of <em><span class="math inline">\(p\)</span></em> is between <em><span class="math inline">\(p_{lower}\)</span></em> and <em><span class="math inline">\(p_{upper}\)</span></em>”. As the Wikipedia article above notes, there are a number of options for doing this and all have certain limitations. For our purposes, the simplest one that we can copy and paste into a spreadsheet will do (<a href="https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval#Normal_approximation_interval" class="uri">https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval#Normal_approximation_interval</a>). In the equations, <em>p<sub>est</sub></em> is the estimate of <em>p</em> we computed above and <em>q<sub>est</sub> = 1 - p<sub>est</sub></em>.</p>
+<p><span class="math display">\[p_{lower}=p_{est}-1.96\sqrt{\frac{1}{N}\cdot p_{est}\cdot q_{est}}\]</span> <span class="math display">\[p_{upper}=p_{est}+1.96\sqrt{\frac{1}{N}\cdot p_{est}\cdot q_{est}}\]</span></p>
+</div>
+</div>
+<div id="expectations" class="section level2">
+<h2><span class="header-section-number">4.3</span> Expectations</h2>
+<p>Now that we have an estimate and a confidence interval for <span class="math inline">\(p\)</span>, we can estimate how much we expect to win or lose per dollar of entry fees. For a $1 50/50, we pay a dollar to enter. If we win, we get $1.80 back, so we win $0.80. If we lose, we lose the dollar. The estimated expectation per dollar is</p>
+<p><span class="math display">\[EV_{est}=p_{est}\cdot0.8-q_{est}\]</span></p>
+<p>In general, if <em><span class="math inline">\(F\)</span></em> is the entry fee in dollars and <em><span class="math inline">\(C\)</span></em> is the cash paid for a win in dollars, then</p>
+<ul>
+<li><p>The winnings <em><span class="math inline">\(W\)</span></em> per dollar is <em><span class="math inline">\((C-F)/F\)</span></em></p></li>
+<li><p>The loss <em><span class="math inline">\(L\)</span></em> per dollar is <span class="math inline">\(F/F=1\)</span></p></li>
+<li><p>The win/loss ratio <em><span class="math inline">\(wlratio\)</span></em> is <span class="math inline">\(\frac{W}{L}=\frac{C-F}{F}\)</span></p></li>
+</ul>
+<p>and the estimated expectation <span class="math inline">\(EV_{est}\)</span> is</p>
+<p><span class="math display">\[EV_{est}=p_{est}\cdot wlratio-q_{est}\]</span></p>
+<p>with confidence interval</p>
+<p><span class="math display">\[EV_{lower}=p_{lower}\cdot wlratio-q_{lower}\]</span> <span class="math display">\[EV_{upper}=p_{upper}\cdot wlratio-q_{upper}\]</span></p>
+<p>In the spreadsheets, we’ll do this calculation for <em><span class="math inline">\(p_{est}\)</span></em>, <em><span class="math inline">\(p_{lower}\)</span></em> and <span class="math inline">\(p_{upper}\)</span>, generating a 95% confidence interval for <span class="math inline">\(EV\)</span>.</p>
+</div>
+<div id="unfavorable-fair-and-favorable-games" class="section level2">
+<h2><span class="header-section-number">4.4</span> Unfavorable, fair and favorable games</h2>
+<p>We say a game is <em>unfavorable</em> if its <span class="math inline">\(EV\)</span> is less than zero. We say it’s <em>fair</em> if it’s exactly zero and <em>favorable</em> if it’s greater than zero <span><span class="math display">\[&lt;/span&gt;@Epstein2014, chapter 3&lt;span&gt;\]</span></span>. When we say “unfavorable”, this is what we mean: if we keep playing this game against <em>anyone</em>, eventually we’ll lose all our money to them.</p>
+<p>In DFS, if <span class="math inline">\(EV\)</span> is less than zero, our bankroll will eventually get wiped out, because we’re playing against both the site (the rake) and the other contestants. If the game is fair - our <span class="math inline">\(EV\)</span> is exactly zero - in theory we can keep playing indefinitely and not get wiped out, but we also won’t grow our bankroll.</p>
+<p><em>So if we want to keep playing, and make money, we need a positive expectation - a favorable game.</em> In DFS, the only way we can do that in the absence of overlays is to have lineups that outscore enough of our competitors to cover the rake with our winnings.</p>
+<p>In the following, to keep the calculations simple, we are going to limit ourselves to three types of contests with simple payout structures:</p>
+<ol style="list-style-type: decimal">
+<li><p>FanDuel 50/50s,</p></li>
+<li><p>DraftKings 50/50s, and</p></li>
+<li><p>DraftKings Triple-Ups.</p></li>
+</ol>
+<p>Note that we will <em>not</em> be dealing with head-to-head contests! Why? Two reasons:</p>
+<ol style="list-style-type: decimal">
+<li><p>Opponent research takes too much time, and</p></li>
+<li><p>The sample size is too small. In a head-to-head, we only get information about how our lineup stacks up against <em>one</em> contestant out of the thousands who enter the contests.</p></li>
+</ol>
+<p>For a 50/50, either FanDuel or DraftKings, <span class="math inline">\(wlratio\)</span> is 0.8. For a DraftKings Triple-Up, <span class="math inline">\(wlratio\)</span> is 2.0. We won’t be looking at FanDuel Triple-Ups because they’re multi-entry, which makes the math more complicated.</p>
+<!--chapter:end:03_probability_theory.Rmd-->
+</div>
+</div>
+<div id="analyzing-contest-details" class="section level1">
+<h1><span class="header-section-number">5</span> Analyzing Contest Details</h1>
+<div id="downloading-and-cleaning-the-data" class="section level2">
+<h2><span class="header-section-number">5.1</span> Downloading and cleaning the data</h2>
+<div id="downloading-contest-details-from-fanduel" class="section level3 unnumbered">
+<h3>Downloading contest details from FanDuel</h3>
+</div>
+<div id="downloading-contest-details-from-draftkings" class="section level3 unnumbered">
+<h3>Downloading contest details from DraftKings</h3>
+</div>
+</div>
+<div id="cash-game-probabilities-and-expectations" class="section level2">
+<h2><span class="header-section-number">5.2</span> Cash game probabilities and expectations</h2>
+</div>
+<div id="tournament-gpp-probabilities-and-expectations" class="section level2">
+<h2><span class="header-section-number">5.3</span> Tournament / GPP probabilities and expectations</h2>
+<!--chapter:end:04_analyzing_contest_details.Rmd-->
+</div>
+</div>
+<div id="analyzing-your-fanduel-and-draftkings-contest-history" class="section level1">
+<h1><span class="header-section-number">6</span> Analyzing Your FanDuel and DraftKings Contest History</h1>
+<div id="downloading-and-cleaning-the-data-1" class="section level2">
+<h2><span class="header-section-number">6.1</span> Downloading and cleaning the data</h2>
+<div id="downloading-contest-history-from-fanduel" class="section level3">
+<h3><span class="header-section-number">6.1.1</span> Downloading contest history from FanDuel</h3>
+<ul>
+<li><p>Log in to FanDuel.</p></li>
+<li><p>Select the ‘History’ button.</p></li>
+<li><p>Press the ‘Download as CSV’ button.</p></li>
+<li><p>Save the CSV file in your ‘Downloads’ folder.</p></li>
+</ul>
+</div>
+<div id="downloading-contest-history-from-draftkings" class="section level3">
+<h3><span class="header-section-number">6.1.2</span> Downloading contest history from DraftKings</h3>
+<ul>
+<li><p>Log in to DraftKings.</p></li>
+<li><p>Select ‘My Contests’ and then ‘History’.</p></li>
+<li><p>Click the ‘Download Entry History’ link.</p></li>
+<li><p>Save the CSV file in your ‘Downloads’ folder.</p></li>
+</ul>
+</div>
+</div>
+<div id="cash-game-probabilities-and-expectations-1" class="section level2">
+<h2><span class="header-section-number">6.2</span> Cash game probabilities and expectations</h2>
+</div>
+<div id="logistic-regression-plots" class="section level2">
+<h2><span class="header-section-number">6.3</span> Logistic regression plots</h2>
+</div>
+<div id="fantasy-point-and-quantile-rank-density-plots" class="section level2">
+<h2><span class="header-section-number">6.4</span> Fantasy point and quantile rank density plots</h2>
+<!--chapter:end:05_analyzing_your_contest_history.Rmd-->
+</div>
+</div>
+<div id="analyzing-draftkings-contest-standings" class="section level1">
+<h1><span class="header-section-number">7</span> Analyzing DraftKings Contest Standings</h1>
+<div id="downloading-the-contest-standings-csv-file" class="section level2">
+<h2><span class="header-section-number">7.1</span> Downloading the contest standings CSV file</h2>
+</div>
+<div id="adding-the-contest-information" class="section level2">
+<h2><span class="header-section-number">7.2</span> Adding the contest information</h2>
+</div>
+<div id="adding-the-payout-data" class="section level2">
+<h2><span class="header-section-number">7.3</span> Adding the payout data</h2>
+</div>
+<div id="parsing-the-entry-names" class="section level2">
+<h2><span class="header-section-number">7.4</span> Parsing the entry names</h2>
+</div>
+<div id="analyzing-the-results" class="section level2">
+<h2><span class="header-section-number">7.5</span> Analyzing the results</h2>
+<!--chapter:end:06_analyzing_contest_results.Rmd-->
+</div>
+</div>
+<div id="analyzing-archetypal-athletes" class="section level1">
+<h1><span class="header-section-number">8</span> Analyzing Archetypal Athletes</h1>
+<!--chapter:end:07_analyzing_archetypal_athletes.Rmd-->
+</div>
+<div id="how-projection-systems-work" class="section level1">
+<h1><span class="header-section-number">9</span> How Projection Systems Work</h1>
+<div id="projecting-game-scores-with-mvglmmrank" class="section level2">
+<h2><span class="header-section-number">9.1</span> Projecting game scores with mvglmmRank</h2>
+</div>
+<div id="projecting-player-fantasy-points-with-glm" class="section level2">
+<h2><span class="header-section-number">9.2</span> Projecting player fantasy points with glm</h2>
+<!--chapter:end:08_projecting_game_scores.Rmd-->
+</div>
+</div>
+<div id="how-optimizers-work" class="section level1">
+<h1><span class="header-section-number">10</span> How Optimizers Work</h1>
+<div id="current-available-optimizers" class="section level2">
+<h2><span class="header-section-number">10.1</span> Current available optimizers</h2>
+<!--chapter:end:09_how_optimizers_work.Rmd-->
+</div>
+</div>
+<!--bookdown:body:end-->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<!--bookdown:link_prev-->
+<!--bookdown:link_next-->
+
+<!--bookdown:config-->
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
