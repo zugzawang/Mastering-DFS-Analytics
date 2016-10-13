@@ -10,7 +10,7 @@ biblio-style: apalike
 link-citations: yes
 ---
 
-# About the book
+# About the book {-}
 _Mastering DFS Analytics_ is a data-driven program to improve your daily fantasy sports results. You'll learn
 
 * The math you need to make informed money management decisions,
@@ -25,7 +25,7 @@ Written by an applied mathematician, _Mastering DFS Analytics_ will give you con
 * Membership on a private mailing list for readers,
 * Leanpub's 100% Happiness Guarantee
 
-## About the Indie Web
+## About the Indie Web {-}
 
 Comments? Questions? <a href="https://twitter.com/znmeb_dfs" rel="me">\@znmeb_dfs on Twitter</a>
 
