@@ -99,11 +99,14 @@ RUN R -e "update.packages(ask = FALSE, quiet = TRUE)"
 RUN useradd -c "DFS Tools" -u 1000 -G sudo -s /bin/bash -m dfstools
 
 # make a desktop and put some files on it
-RUN mkdir -p /home/dfstools/Projects
+RUN mkdir -p /home/dfstools/Projects/MasteringDFSAnalyticsBook
+RUN mkdir -p /home/dfstools/Projects/dfstools
 RUN mkdir -p /home/dfstools/Scripts
 RUN mkdir -p /home/dfstools/Jupyter
 COPY *.R /home/dfstools/Scripts/
 COPY *jupyter.bash /home/dfstools/Scripts/
+COPY MasteringDFSAnalyticsBook/* /home/dfstools/Projects/MasteringDFSAnalyticsBook/
+COPY dfstools/* /home/dfstools/Projects/dfstools/
 RUN chown -R dfstools:dfstools /home/dfstools/
 
 # install new R packages in 'dfstools' personal library
