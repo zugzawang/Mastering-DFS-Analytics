@@ -16,7 +16,7 @@ Contributing to the project is really quite simple:
 1. Install a Docker host. I regularly test with Docker for Windows on Windows 10 Pro and on Fedora 24 with the Fedora-provided Docker. This should work with any Docker host at release 1.10 or later.
 2. Download and unpack the zip archive <https://github.com/znmeb/mastering-dfs-analytics-bookdown/raw/master/docker-commands.zip>. This contains script files to simplify the process of getting started.
 3. Open a terminal / command line window, enter the directory where you unpacked the zip archive and type `./1pull.cmd`. This will download the Docker image. This can take a while; it's about 1.6 gigabytes.
-4. Type `./2set-password.cmd` to set the password in the image for the `dfstools` user. You will be prompted for a password. Enter the same password twice. If you mistype one of the entries, simply run the script again.
+4. Type `./2set-password.cmd` to set the password in the image for the `dfstools` user. You will be prompted for a password. Enter the same password twice. If you mistype one of the entries, simply run the script again. You can run this script again whenever you want to change the `dfstools` password in the image.
 5. Type `./3install-rstudio-preview.cmd` to install the RStudio Server preview release in the image.
 6. Type `./4rstudio-detach.cmd` to start the RStudio Server image in the `dfstools` container. Control will return to the terminal; the server is running in the background. Leave the terminal open.
 7. Browse to <http://localhost:7878>. Log in as user `dfstools` with the password you set above.
