@@ -5,3 +5,4 @@
 
 rm docker-commands.zip
 zip -9r docker-commands.zip *.cmd
+git status
