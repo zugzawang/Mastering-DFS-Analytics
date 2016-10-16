@@ -15,10 +15,10 @@ Contributing to the project is really quite simple:
 ## Getting started
 1. Install a Docker host. I regularly test with Docker for Windows on Windows 10 Pro and on Fedora 24 with the Fedora-provided Docker. This should work with any Docker host at release 1.10 or later.
 2. Download and unpack the zip archive <https://github.com/znmeb/mastering-dfs-analytics-bookdown/raw/master/docker-commands.zip>. This contains script files to simplify the process of getting started.
-3. Open a terminal / command line window and enter the directory where you unpacked the zip archive and type `./1pull.cmd`. This will download the Docker image. This can take a while; it's about 1.6 gigabytes.
-4. Set the password in the image for the `dfstools` user. Type `./2set-password.cmd`. You will be prompted for a password. Enter the same password twice. If you mistype one of the entries, simply run the script again.
-5. Install RStudio Server preview release. Type `./3install-rstudio-preview.cmd`.
-6. Start the RStudio Server in a container. Type `./4rstudio-detach.cmd`.
+3. Open a terminal / command line window, enter the directory where you unpacked the zip archive and type `./1pull.cmd`. This will download the Docker image. This can take a while; it's about 1.6 gigabytes.
+4. Type `./2set-password.cmd` to set the password in the image for the `dfstools` user. You will be prompted for a password. Enter the same password twice. If you mistype one of the entries, simply run the script again.
+5. Type `./3install-rstudio-preview.cmd` to install the RStudio Server preview release in the image.
+6. Type `./4rstudio-detach.cmd` to start the RStudio Server image in the `dfstools` container. Control will return to the terminal; the server is running in the background. Leave the terminal open.
 7. Browse to <http://localhost:7878>. Log in as user `dfstools` with the password you set above.
 8. Do your thing.
 9. When your thing is done, close the RStudio session. Press the red "power off" button in the upper right.
@@ -26,7 +26,7 @@ Contributing to the project is really quite simple:
 
 ## Alternate developer scripts
 * build.cmd: builds the image locally, rather than downloading it like `1pull.cmd`.
-* install-rstudio-stable.cmd: install the stable version of RStudio Server instead of the preview
+* install-rstudio-stable.cmd: install the stable version of RStudio Server instead of the preview. I don't recommend this; the stable server doesn't support many features used in the book.
 * install-texlive-full.cmd: if you do a lot of PDF generation, you may find missing LaTeX packages. If this happens, run `./install-texlive-full.cmd` on the Docker host. This will install ***all*** of TeXLive. It adds about 4 GB to the image and takes quite a bit of time.
 * rstudio-interactive.cmd: instead of running RStudio Server in the background, run it in the terminal where you can see all its log messages. Type `CTL-C` ***once*** to stop the server. You do not need to run `5stop-and-save.cmd` afterwards.
 
