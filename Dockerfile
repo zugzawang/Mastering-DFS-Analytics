@@ -119,6 +119,10 @@ RUN R --no-save < `R RHOME`/etc/Rprofile.site
 # install platform tools
 RUN R --no-save < /home/dfstools/Scripts/platform.R
 
+# Render the book as an integration test
+WORKDIR /home/dfstools/Projects/MasteringDFSAnalyticsBook
+RUN ./render.bash
+
 # set up server run-time
 WORKDIR /home/dfstools
 EXPOSE 7777
