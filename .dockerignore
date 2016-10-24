@@ -1,6 +1,0 @@
-*.cmd
-*.zip
-.git/
-.R*
-_book
-dfstools.rds
