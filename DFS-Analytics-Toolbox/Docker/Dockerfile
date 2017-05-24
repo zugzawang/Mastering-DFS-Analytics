@@ -1,5 +1,5 @@
 # DFSTOOLS - Copyright (C) 2017 M. Edward (Ed) Borasky <znmeb@znmeb.net>
-# License: MIT
+# License: AGPL-3
 
 FROM docker.io/ubuntu:xenial
 MAINTAINER M. Edward (Ed) Borasky <znmeb@znmeb.net>
@@ -22,19 +22,19 @@ RUN \
   wget \
   && add-apt-repository -y ppa:marutter/rrutter \
   && add-apt-repository -y ppa:marutter/c2d4u \
+  && add-apt-repository -y ppa:staticfloat/juliareleases \
   && apt-get update \
   && apt-get install -qqy --no-install-recommends \
+  julia \
   r-cran-devtools \
   && apt-get clean
 
 # Install the rest of the system-level components
 RUN mkdir -p /TMPDIR
 COPY Rprofile.site /etc/R/
-ENV JULIA_TARBALL=https://julialang.s3.amazonaws.com/bin/linux/x64/0.5/julia-0.5.1-linux-x86_64.tar.gz
 RUN \
   R -e "install.packages(c('repr', 'IRdisplay'), quiet = TRUE)" \
   && R -e "devtools::install_github('IRkernel/IRkernel', quiet = TRUE)" \
-  && curl -Ls $JULIA_TARBALL | tar xfz - --strip-components=1 --directory=/usr/local \
   && useradd -c "DFS Analytics Toolbox" -u 1000 -s /bin/bash -m dfstools
 
 # Install user components
