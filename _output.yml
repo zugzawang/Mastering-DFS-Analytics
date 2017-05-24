@@ -3,3 +3,5 @@ bookdown::gitbook:
   includes:
     in_header: webmention.html
   css: style.css
+
+bookdown::tufte_book2: default
