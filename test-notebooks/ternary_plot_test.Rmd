@@ -1,0 +1,47 @@
+---
+title: "Ternary Plot Test"
+output: html_notebook
+---
+
+## Libraries
+```{r}
+library(magrittr)
+library(dfstools)
+library(DT)
+```
+
+## Get data
+```{r}
+playerbox <- playerboxscore("~/Dropbox/16-17-player-data/season-player-feed-04-12-2017.xlsx")
+```
+
+## Run model
+```{r}
+arch_search <- archetype_search(playerbox)
+screeplot(arch_search)
+arch_model <- archetypal_analysis(playerbox)
+player_table <- arch_model$player_table
+archetypes <- arch_model$archetypes
+player_table %<>% dplyr::filter(Bench < 0.99)
+save(arch_model, archetypes, player_table, playerbox, file = "~/Projects/mastering-dfs-analytics-package/test-notebooks/ternary-data.RData")
+dtx <- player_table
+dtx[, 4:7] <- round(dtx[, 4:7], 4)
+DT::datatable(dtx)
+dtx %>% dplyr::filter(Player == "Mason Plumlee" | Player == "Jusuf Nurkic") %>% knitr::kable()
+```
+
+## Generate team plots
+```{r}
+teams <- sort(unique(as.character(player_table$Team)))
+for (t in teams) {
+  team_data <- player_table %>% 
+    dplyr::filter(Team == t) %>% dplyr::top_n(12, Overall) %>% dplyr::arrange(desc(Overall))
+  ternary_plot(
+    player_table = team_data, 
+    plot_title = t, 
+    top_label = "Back", 
+    left_label = "Front") %>% print()
+  filename <- paste(t, "pdf", sep = ".")
+  ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
+}
+```
