@@ -1,4 +1,5 @@
 #! /bin/bash -v
+# License: AGPL-3
 
 export HOST_PROJECT_HOME=~/dfs_project_home
 docker run -it --rm \

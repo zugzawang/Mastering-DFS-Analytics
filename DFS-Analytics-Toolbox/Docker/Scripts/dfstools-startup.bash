@@ -1,6 +1,6 @@
 #! /bin/bash
 # Copyright (C) 2017 M. Edward (Ed) Borasky <znmeb@znmeb.net>
-# License: MIT
+# License: AGPL-3
 
 source $VIRTUALENVWRAPPER_SCRIPT \
   && workon dfstools \

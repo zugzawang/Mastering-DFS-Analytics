@@ -1,4 +1,5 @@
 #! /bin/bash
+# License: AGPL-3
 
 # Uninstall any old versions
 echo "Removing any old Docker packages"
