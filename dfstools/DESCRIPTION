@@ -25,4 +25,5 @@ Imports: archetypes,
     magrittr,
     tibble,
     ggtern,
-    RColorBrewer
+    RColorBrewer,
+    DT
