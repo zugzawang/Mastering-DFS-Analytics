@@ -16,6 +16,13 @@ library(DT)
 playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-05-28-2017.xlsx")
 ```
 
+## EDA
+```{r}
+boxplot(playerbox$dkfp)$stats
+boxplot(playerbox$dkfp ~ playerbox$own_team)$stats
+```
+
+
 ## Run model
 ```{r}
 arch_search <- archetype_search(playerbox)
