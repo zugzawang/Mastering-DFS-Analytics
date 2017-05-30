@@ -12,7 +12,8 @@ library(DT)
 
 ## Get data
 ```{r}
-playerbox <- playerboxscore("~/Dropbox/16-17-player-data/season-player-feed-04-12-2017.xlsx")
+# playerbox <- playerboxscore("~/Dropbox/16-17-player-data/season-player-feed-04-12-2017.xlsx")
+playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-05-28-2017.xlsx")
 ```
 
 ## Run model
