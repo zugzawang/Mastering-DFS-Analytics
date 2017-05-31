@@ -26,4 +26,6 @@ Imports: archetypes,
     tibble,
     ggtern,
     RColorBrewer,
-    DT
+    DT,
+    DBI,
+    RSQLite

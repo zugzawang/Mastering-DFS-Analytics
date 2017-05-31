@@ -114,8 +114,6 @@ archetype_search <- function(pbs) {
 
   # make input dataset
   archinput <- .arch_data(pbs)
-  View(archinput)
-  stop("Testing")
 
   # run the archetypal analysis
   max_arch <- 7
