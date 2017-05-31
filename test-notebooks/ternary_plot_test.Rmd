@@ -5,10 +5,10 @@ output: html_notebook
 
 ## Libraries
 ```{r}
-devtools::install(
-  "~/Projects/Mastering-DFS-Analytics/dfstools/",
-  build_vignettes = TRUE
-)
+# devtools::install(
+#   "~/Projects/Mastering-DFS-Analytics/dfstools/",
+#   build_vignettes = TRUE
+# )
 library(dfstools)
 library(tidyverse)
 library(archetypes)
