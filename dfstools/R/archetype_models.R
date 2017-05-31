@@ -60,8 +60,8 @@ archetypal_analysis <- function(pbs) {
   archetypes <- tibble::as_tibble(t(archetypes::parameters(best)))
 
   # compute the ordering:
-  # descending by first row, which is total minutes played
-  ordering <- order(-archetypes[1, ])
+  # descending by row 10, which is total rebounds
+  ordering <- order(-archetypes[10, ])
 
   # get the alphas
   player_table <- tibble::as_tibble(best$alphas)
@@ -73,8 +73,8 @@ archetypal_analysis <- function(pbs) {
   # column names
   colnames(archetypes) <- colnames(player_table) <-
     paste("Arch", seq(1, .num_archetypes), sep = "")
-  colnames(archetypes)[1] <- colnames(player_table)[1] <- "Back"
-  colnames(archetypes)[2] <- colnames(player_table)[2] <- "Front"
+  colnames(archetypes)[1] <- colnames(player_table)[1] <- "Front"
+  colnames(archetypes)[2] <- colnames(player_table)[2] <- "Back"
   colnames(archetypes)[3] <- colnames(player_table)[3] <- "Bench"
   archetypes <- dplyr::bind_cols(
     list(Metric = colnames(archdata)) %>% tibble::as_tibble(),
@@ -82,17 +82,18 @@ archetypal_analysis <- function(pbs) {
   )
 
   # add total column to player table
-  player_table  %<>% as.data.frame()
+  player_table  <- as.data.frame(player_table)
   for (i in 1:3) {
     player_table[, i] <- scales::rescale(player_table[, i])
   }
-  player_table %<>% tibble::as_tibble() %>% dplyr::mutate_(Overall = ~ Back + Front)
+  player_table <- tibble::as_tibble(player_table) %>%
+    dplyr::mutate(Overall = Back + Front)
 
   # tag player_table with player names and positions
   player_table <- dplyr::bind_cols(
-    dplyr::select_(archinput, ~ player_full_name, ~ position, ~ own_team),
+    dplyr::select(archinput, player_full_name, position, own_team),
     player_table) %>%
-    dplyr::arrange_(~ desc(Overall))
+    dplyr::arrange(desc(Overall))
   colnames(player_table)[1:3] <- c("Player", "Position", "Team")
 
   return(list(
