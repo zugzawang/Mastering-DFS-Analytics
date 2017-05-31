@@ -5,70 +5,20 @@ output: html_notebook
 
 ## Libraries
 ```{r}
-
-# Get from CRAN first
-install.packages(c("tidyverse", "nycflights13", "Lahman"))
-
-# Update from GitHub
-devtools::install_github(
-  "tidyverse/tibble", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/ggplot2", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/readr", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/readxl", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/tidyr", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/purrr", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/dplyr", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/stringr", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/forcats", 
-  force = TRUE,
-  build_vignettes = TRUE)
-devtools::install_github(
-  "tidyverse/tidyverse",
-  force = TRUE,
-  build_vignettes = TRUE)
-
-# library(magrittr)
-# library(dfstools)
-# library(DT)
-
+devtools::install(
+  "~/Projects/Mastering-DFS-Analytics/dfstools/",
+  build_vignettes = TRUE
+)
+library(dfstools)
+library(tidyverse)
+library(archetypes)
 ```
 
 ## Get data
 ```{r}
-# playerbox <- playerboxscore("~/Dropbox/16-17-player-data/season-player-feed-04-12-2017.xlsx")
-playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-05-28-2017.xlsx")
+playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-feed-04-12-2017.xlsx")
+# playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-05-28-2017.xlsx")
 ```
-
-## EDA
-```{r}
-boxplot(playerbox$dkfp)$stats
-boxplot(playerbox$dkfp ~ playerbox$own_team)$stats
-```
-
 
 ## Run model
 ```{r}
@@ -77,12 +27,11 @@ screeplot(arch_search)
 arch_model <- archetypal_analysis(playerbox)
 player_table <- arch_model$player_table
 archetypes <- arch_model$archetypes
-player_table %<>% dplyr::filter(Bench < 0.99)
+player_table <- player_table %>% dplyr::filter(Bench < 0.99)
 save(arch_model, archetypes, player_table, playerbox, file = "~/Projects/mastering-dfs-analytics-package/test-notebooks/ternary-data.RData")
 dtx <- player_table
 dtx[, 4:7] <- round(dtx[, 4:7], 4)
 DT::datatable(dtx)
-dtx %>% dplyr::filter(Player == "Mason Plumlee" | Player == "Jusuf Nurkic") %>% knitr::kable()
 ```
 
 ## Generate team plots

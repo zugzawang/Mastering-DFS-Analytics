@@ -5,7 +5,7 @@ output: html_notebook
 ```{r}
 
 # Get from CRAN first
-install.packages(c("tidyverse", "nycflights13", "Lahman", "devtools", "roxygen2"))
+install.packages(c("tidyverse", "nycflights13", "Lahman", "devtools", "roxygen2", "ggtern"))
 
 # Update from GitHub
 devtools::install_github(
@@ -55,8 +55,5 @@ devtools::install_github(
   build_vignettes = TRUE)
 devtools::install_github(
   "tidyverse/tidyverse",
-  build_vignettes = TRUE)
-devtools::install_github(
-  "nicholasehamilton/ggtern",
   build_vignettes = TRUE)
 ```
