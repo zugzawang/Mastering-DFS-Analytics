@@ -1,5 +1,4 @@
 # internal input collection functions
-.summary_columns <- 2:21
 .analysis_columns <- 4:24
 .seed <- 54321
 .nrep <- 32
@@ -7,21 +6,20 @@
 
 .arch_data <- function(pbs) {
   current_team <- pbs %>%
-    dplyr::group_by_(~ player_full_name) %>%
-    dplyr::filter_(~ date == max(date)) %>%
-    dplyr::select_(~ player_full_name, ~ position, ~ own_team) %>%
+    dplyr::group_by(player_full_name) %>%
+    dplyr::filter(date == max(date)) %>%
+    dplyr::select(player_full_name, position, own_team) %>%
     dplyr::ungroup()
   game_count <- pbs %>%
-    dplyr::group_by_(~ player_full_name) %>%
-    dplyr::summarize_(games = ~ length(min))
+    dplyr::group_by(player_full_name) %>%
+    dplyr::summarize(games = length(min))
   pbsx <- pbs %>%
-    dplyr::select_(~ player_full_name, ~ min:fdfp) %>%
-    dplyr::group_by_(~ player_full_name) %>%
-    dplyr::summarize_at(.funs = dplyr::funs(sum), .cols = .summary_columns) %>%
+    dplyr::select(player_full_name, min:fdfp) %>%
+    dplyr::group_by(player_full_name) %>%
+    dplyr::summarize_if(is.numeric, sum, na.rm = TRUE) %>%
     dplyr::ungroup() %>%
     dplyr::full_join(game_count, by = "player_full_name") %>%
-    dplyr::mutate_(min_per_game = ~ min / games) %>%
-    dplyr::arrange_(~ player_full_name)
+    dplyr::mutate(min_per_game = min / games)
   pbsx <- current_team %>%
     dplyr::full_join(pbsx, by = "player_full_name")
   return(pbsx)
@@ -116,6 +114,8 @@ archetype_search <- function(pbs) {
 
   # make input dataset
   archinput <- .arch_data(pbs)
+  View(archinput)
+  stop("Testing")
 
   # run the archetypal analysis
   max_arch <- 7
