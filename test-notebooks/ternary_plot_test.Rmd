@@ -5,9 +5,56 @@ output: html_notebook
 
 ## Libraries
 ```{r}
-library(magrittr)
-library(dfstools)
-library(DT)
+
+# Get from CRAN first
+install.packages(c("tidyverse", "nycflights13", "Lahman"))
+
+# Update from GitHub
+devtools::install_github(
+  "tidyverse/tibble", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/ggplot2", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/readr", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/readxl", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/tidyr", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/purrr", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/dplyr", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/stringr", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/forcats", 
+  force = TRUE,
+  build_vignettes = TRUE)
+devtools::install_github(
+  "tidyverse/tidyverse",
+  force = TRUE,
+  build_vignettes = TRUE)
+
+# library(magrittr)
+# library(dfstools)
+# library(DT)
+
 ```
 
 ## Get data
