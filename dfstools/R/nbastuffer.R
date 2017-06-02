@@ -103,7 +103,7 @@ yahoo_points <- function(boxscore) {
 #' @importFrom dplyr %>%
 #' @param spreadsheet a file with an NBAStuffer player box score dataset
 #' @param sheet_number the sheet number within the spreadsheet (default 1)
-#' @return a data frame of the input spreadsheet, augmented with columns for double-doubles and triple doubles
+#' @return a data frame of the input spreadsheet, augmented with columns for double-doubles, triple doubles and fantasy points
 #' @examples
 #' \dontrun{
 #' playerbox <- playerboxscore(
@@ -118,12 +118,13 @@ playerboxscore <- function(spreadsheet, sheet_number = 1) {
   # comparable date stamp
   df$date <- .fixdate(df$date)
 
-  # compute double-double and triple-double
+  # compute double-double, triple-double and fantasy points
   count <- .dd(df$tot) + .dd(df$a) + .dd(df$st) + .dd(df$bl) + .dd(df$pts)
   df$ddbl <- as.integer(count >= 2)
   df$tdbl <- as.integer(count >= 3)
-  df$dkfp <- draftkings_points(df)
-  df$fdfp <- fanduel_points(df)
+  df$draftkings_points <- draftkings_points(df)
+  df$fanduel_points <- fanduel_points(df)
+  df$yahoo_points <- yahoo_points(df)
 
   # result
   return(df)
