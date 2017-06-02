@@ -100,8 +100,7 @@ yahoo_points <- function(boxscore) {
 #' @name playerboxscore
 #' @description Creates a player box score data frame from an NBAStuffer spreadsheet
 #' @export playerboxscore
-#' @importFrom magrittr %>%
-#' @importFrom magrittr %<>%
+#' @importFrom dplyr %>%
 #' @param spreadsheet a file with an NBAStuffer player box score dataset
 #' @param sheet_number the sheet number within the spreadsheet (default 1)
 #' @return a data frame of the input spreadsheet, augmented with columns for double-doubles and triple doubles
@@ -134,8 +133,7 @@ playerboxscore <- function(spreadsheet, sheet_number = 1) {
 #' @name gameboxscore
 #' @description Creates a game box score data frame from a player box score data frame
 #' @export gameboxscore
-#' @importFrom magrittr %>%
-#' @importFrom magrittr %<>%
+#' @importFrom dplyr %>%
 #' @param pbs a player box score data frame
 #' @return a data frame of game box scores
 #' @examples
@@ -161,8 +159,7 @@ gameboxscore <- function(pbs) {
 
 # internal function to make sensible column names
 .sensible_column_names <- function(df) {
-  names <- colnames(df)
-  names %<>%
+  names <- colnames(df) %>%
     gsub(pattern = "\\W+", replacement = "_") %>%
     gsub(pattern = "\\s+", replacement = "_") %>%
     gsub(pattern = "^3", replacement = "x3") %>%
