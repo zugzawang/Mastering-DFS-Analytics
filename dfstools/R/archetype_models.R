@@ -28,7 +28,7 @@
 #' @title Archetypal Analysis
 #' @name archetypal_analysis
 #' @description perform an "archetypal athletes" analysis
-#' @import magrittr
+#' @importFrom dplyr %>%
 #' @export archetypal_analysis
 #' @param pbs player box score
 #' @return a list of
@@ -107,7 +107,7 @@ archetypal_analysis <- function(pbs) {
 #' @name archetype_search
 #' @description search for the best archetypal analysis of real box score values
 #' @export archetype_search
-#' @import magrittr
+#' @importFrom dplyr %>%
 #' @param pbs player box score
 #' @return an "as" object from archetypes::stepArchetypes
 
@@ -133,7 +133,7 @@ archetype_search <- function(pbs) {
 #' @name ternary_plot
 #' @description a visualization of a set of players using `ggtern`
 #' @export ternary_plot
-#' @import magrittr
+#' @importFrom dplyr %>%
 #' @import ggtern
 #' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 geom_point
