@@ -9,6 +9,7 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr ungroup
 #' @importFrom dplyr summarize_if
+#' @importFrom dplyr arrange
 #' @importFrom tibble column_to_rownames
 #' @param pbs player box score
 #' @return an "as" object from archetypes::stepArchetypes
