@@ -17,7 +17,7 @@ Read a DraftKings contest history CSV into a tibble
 }
 \examples{
 \dontrun{
-View(dktidy::read_draftkings_contest_history(
+View(dfstools::read_draftkings_contest_history(
 "~/Projects/draftkings/contest-standings/draftkings-contest-entry-history.csv"))
 }
 }

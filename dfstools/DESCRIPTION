@@ -11,21 +11,10 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports: archetypes,
-    mvglmmRank,
-    lubridate,
-    moments,
-    readr,
-    readxl,
-    scales,
-    reshape2,
-    stringdist,
-    stringr,
     dplyr,
     ggplot2,
-    magrittr,
-    tibble,
     ggtern,
-    RColorBrewer,
-    DT,
-    DBI,
-    RSQLite
+    readr,
+    tibble,
+    lubridate,
+    readxl

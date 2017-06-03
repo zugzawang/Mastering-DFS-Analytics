@@ -3,6 +3,17 @@
   as.integer(x >= 10)
 }
 
+# internal function to make sensible column names
+.sensible_column_names <- function(df) {
+  names <- colnames(df) %>%
+    gsub(pattern = "\\W+", replacement = "_") %>%
+    gsub(pattern = "\\s+", replacement = "_") %>%
+    gsub(pattern = "^3", replacement = "x3") %>%
+    gsub(pattern = "_$", replacement = "") %>%
+    tolower()
+  return(names)
+}
+
 #  Points calculators
 #' @title Real-world points
 #' @name real_points
@@ -91,16 +102,14 @@ yahoo_points <- function(boxscore) {
   -1.0 * boxscore$to
 }
 
-# internal date reformatter
-.fixdate <- function(date_string) {
-  lubridate::mdy(date_string)
-}
-
 #' @title Make player box score data frame
 #' @name playerboxscore
 #' @description Creates a player box score data frame from an NBAStuffer spreadsheet
 #' @export playerboxscore
 #' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom lubridate mdy
+#' @importFrom readxl read_excel
 #' @param spreadsheet a file with an NBAStuffer player box score dataset
 #' @param sheet_number the sheet number within the spreadsheet (default 1)
 #' @return a data frame of the input spreadsheet, augmented with columns for double-doubles, triple doubles and fantasy points
@@ -111,12 +120,12 @@ yahoo_points <- function(boxscore) {
 #' }
 
 playerboxscore <- function(spreadsheet, sheet_number = 1) {
-  df <- readxl::read_excel(spreadsheet, sheet = sheet_number) %>%
-    dplyr::filter_(~ !is.na(DATE))
+  df <- read_excel(spreadsheet, sheet = sheet_number) %>%
+    filter(!is.na("DATE"))
   colnames(df) <- .sensible_column_names(df)
 
   # comparable date stamp
-  df$date <- .fixdate(df$date)
+  df$date <- mdy(df$date)
 
   # compute double-double, triple-double and fantasy points
   count <- .dd(df$tot) + .dd(df$a) + .dd(df$st) + .dd(df$bl) + .dd(df$pts)
@@ -125,46 +134,8 @@ playerboxscore <- function(spreadsheet, sheet_number = 1) {
   df$draftkings_points <- draftkings_points(df)
   df$fanduel_points <- fanduel_points(df)
   df$yahoo_points <- yahoo_points(df)
+  df$games <- 1
 
   # result
   return(df)
-}
-
-#' @title Make game box score data frame from player box score
-#' @name gameboxscore
-#' @description Creates a game box score data frame from a player box score data frame
-#' @export gameboxscore
-#' @importFrom dplyr %>%
-#' @param pbs a player box score data frame
-#' @return a data frame of game box scores
-#' @examples
-#' \dontrun{
-#' playerbox <- playerboxscore(
-#'   "~/Dropbox/16-17-player-data/season-player-feed-02-03-2017.xlsx")
-#' gamebox <- gameboxscore(playerbox)
-#' }
-
-gameboxscore <- function(pbs) {
-  columns <- colnames(pbs)[8:25]
-  df <- pbs %>% dplyr::group_by_(
-    ~ data_set,
-    ~ date,
-    ~ own_team,
-    ~ opp_team,
-    ~ venue_r_h) %>%
-    dplyr::summarize_at(.funs = dplyr::funs(sum), .cols = columns) %>%
-    dplyr::ungroup()
-  df$min <- round(df$min, 0)
-  return(df)
-}
-
-# internal function to make sensible column names
-.sensible_column_names <- function(df) {
-  names <- colnames(df) %>%
-    gsub(pattern = "\\W+", replacement = "_") %>%
-    gsub(pattern = "\\s+", replacement = "_") %>%
-    gsub(pattern = "^3", replacement = "x3") %>%
-    gsub(pattern = "_$", replacement = "") %>%
-    tolower()
-  return(names)
 }

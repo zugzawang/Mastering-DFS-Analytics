@@ -12,7 +12,7 @@ playerboxscore(spreadsheet, sheet_number = 1)
 \item{sheet_number}{the sheet number within the spreadsheet (default 1)}
 }
 \value{
-a data frame of the input spreadsheet, augmented with columns for double-doubles and triple doubles
+a data frame of the input spreadsheet, augmented with columns for double-doubles, triple doubles and fantasy points
 }
 \description{
 Creates a player box score data frame from an NBAStuffer spreadsheet

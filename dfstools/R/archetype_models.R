@@ -1,106 +1,36 @@
-# internal input collection functions
-.analysis_columns <- 4:24
-.seed <- 54321
-.nrep <- 32
-.num_archetypes <- 3
-
-.arch_data <- function(pbs) {
-  current_team <- pbs %>%
-    dplyr::group_by(player_full_name) %>%
-    dplyr::filter(date == max(date)) %>%
-    dplyr::select(player_full_name, position, own_team) %>%
-    dplyr::ungroup()
-  game_count <- pbs %>%
-    dplyr::group_by(player_full_name) %>%
-    dplyr::summarize(games = length(min))
-  pbsx <- pbs %>%
-    dplyr::select(player_full_name, min:fdfp) %>%
-    dplyr::group_by(player_full_name) %>%
-    dplyr::summarize_if(is.numeric, sum, na.rm = TRUE) %>%
-    dplyr::ungroup() %>%
-    dplyr::full_join(game_count, by = "player_full_name") %>%
-    dplyr::mutate(min_per_game = min / games)
-  pbsx <- current_team %>%
-    dplyr::full_join(pbsx, by = "player_full_name")
-  return(pbsx)
-}
-
-#' @title Archetypal Analysis
-#' @name archetypal_analysis
-#' @description perform an "archetypal athletes" analysis
+#' @title Archetype Prep
+#' @name archetype_prep
+#' @description prepare a plaer box score for archetypal analysis
+#' @export archetype_prep
 #' @importFrom dplyr %>%
-#' @export archetypal_analysis
+#' @importFrom dplyr group_by
+#' @importFrom dplyr select
+#' @importFrom dplyr select_if
+#' @importFrom dplyr filter
+#' @importFrom dplyr ungroup
+#' @importFrom dplyr summarize_if
+#' @importFrom tibble column_to_rownames
 #' @param pbs player box score
-#' @return a list of
-#' \itemize{
-#' \item archetypes the parameters that define each archetype
-#' \item players the players tagged with their loadings on each archetype
-#' \item best the model object created in the analysis
-#' \item archdata the numerical inputs for the model}
+#' @return an "as" object from archetypes::stepArchetypes
 
-archetypal_analysis <- function(pbs) {
+archetype_prep <- function(pbs) {
 
-  # make input dataset
-  archinput <- .arch_data(pbs)
-
-    # run the archetypal analysis
-  archdata <- as.matrix(archinput[, .analysis_columns])
-  set.seed(.seed)
-  as <- archetypes::stepArchetypes(
-    data = archdata,
-    method = archetypes::robustArchetypes,
-    k = .num_archetypes,
-    verbose = FALSE,
-    nrep = .nrep)
-
-  # pick best model
-  best <- archetypes::bestModel(as[[1]])
-
-  # get the archetype vectors
-  archetypes <- tibble::as_tibble(t(archetypes::parameters(best)))
-
-  # compute the ordering:
-  # descending by row 10, which is total rebounds
-  ordering <- order(-archetypes[10, ])
-
-  # get the alphas
-  player_table <- tibble::as_tibble(best$alphas)
-
-  # reorder the columns
-  archetypes <- archetypes[, ordering]
-  player_table <- player_table[, ordering]
-
-  # column names
-  colnames(archetypes) <- colnames(player_table) <-
-    paste("Arch", seq(1, .num_archetypes), sep = "")
-  colnames(archetypes)[1] <- colnames(player_table)[1] <- "Front"
-  colnames(archetypes)[2] <- colnames(player_table)[2] <- "Back"
-  colnames(archetypes)[3] <- colnames(player_table)[3] <- "Bench"
-  archetypes <- dplyr::bind_cols(
-    list(Metric = colnames(archdata)) %>% tibble::as_tibble(),
-    archetypes
-  )
-
-  # add total column to player table
-  player_table  <- as.data.frame(player_table)
-  for (i in 1:3) {
-    player_table[, i] <- scales::rescale(player_table[, i])
-  }
-  player_table <- tibble::as_tibble(player_table) %>%
-    dplyr::mutate(Overall = Back + Front)
-
-  # tag player_table with player names and positions
-  player_table <- dplyr::bind_cols(
-    dplyr::select(archinput, player_full_name, position, own_team),
-    player_table) %>%
-    dplyr::arrange(desc(Overall))
-  colnames(player_table)[1:3] <- c("Player", "Position", "Team")
-
-  return(list(
-    archetypes = archetypes,
-    player_table = player_table,
-    best = best,
-    archdata = archdata))
+  # figure out which team each player is currently on
+  current_team <- pbs %>%
+    group_by(player_full_name) %>%
+    filter(date == max(date)) %>%
+    select("player_full_name", "position", "own_team") %>%
+    ungroup()
+  leftmost <- 8 # leftmost numeric in a box score row
+  rightmost <- ncol(pbs) # rightmost numeric
+  pbs_summary <- pbs %>%
+    select("player_full_name", leftmost:rightmost) %>%
+    group_by(player_full_name) %>%
+    summarize_if(is.numeric, sum, na.rm = TRUE) %>%
+    ungroup() %>%
+    column_to_rownames(var = "player_full_name") %>%
+    as.matrix()
+  return(list(current_team = current_team, pbs_summary = pbs_summary))
 }
 
 #' @title Archetype Search
@@ -114,52 +44,17 @@ archetypal_analysis <- function(pbs) {
 archetype_search <- function(pbs) {
 
   # make input dataset
-  archinput <- .arch_data(pbs)
+  arch_input <- archetype_prep(pbs)
 
   # run the archetypal analysis
-  max_arch <- 7
-  archdata <- as.matrix(archinput[, .analysis_columns])
-  set.seed(.seed)
-  as <- archetypes::stepArchetypes(
-    data = archdata,
+  max_arch <- 6
+  arch_data <- arch_input$pbs_summary
+  set.seed(1924)
+  arch_results <- archetypes::stepArchetypes(
+    data = arch_data,
     method = archetypes::robustArchetypes,
     k = 1:max_arch,
     verbose = FALSE,
-    nrep = .nrep)
-  return(as)
-}
-
-#' @title Ternary Plot
-#' @name ternary_plot
-#' @description a visualization of a set of players using `ggtern`
-#' @export ternary_plot
-#' @importFrom dplyr %>%
-#' @import ggtern
-#' @importFrom ggplot2 ggtitle
-#' @importFrom ggplot2 geom_point
-#' @importFrom ggplot2 scale_fill_manual
-#' @param player_table a data frame with player archetype values
-#' @param plot_title the plot title
-#' @param top_label the label for the top apex (backcourt)
-#' @param left_label the label for the left apex (frontcourt)
-#' @return a `ggplot` object
-
-ternary_plot <- function(player_table, plot_title, top_label, left_label) {
-
-  # colour-blind-friendly palette
-  cbPalette <- RColorBrewer::brewer.pal(n = 12, name = "Paired")
-  xdata <- dplyr::mutate(
-    player_table,
-    `Player/Position` = paste(Player, Position, sep = "/"))
-  plot_object <- ggtern(
-    data = xdata, mapping =
-      aes(x = Front, y = Back, z = Bench)) +
-    geom_point(
-      aes(fill = `Player/Position`), shape = 21, color = "black", size = 7) +
-    theme_nomask() +
-    scale_fill_manual(values = cbPalette) +
-    ggtitle(plot_title) +
-    Tlab(top_label) +
-    Llab(left_label)
-  return(plot_object)
+    nrep = 64)
+  return(list(arch_input = arch_input, arch_results = arch_results))
 }
