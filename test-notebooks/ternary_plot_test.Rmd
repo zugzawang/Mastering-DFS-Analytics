@@ -79,7 +79,6 @@ teams <- sort(unique(as.character(player_table$own_team)))
 for (t in teams) {
   team_data <- player_table %>% 
     filter(own_team == t) %>% 
-    top_n(12, 1 - Bench) %>% 
     arrange(desc(1 - Bench))
   pdf(
     file = paste(t, "pdf", sep = "." ),
@@ -89,7 +88,7 @@ for (t in teams) {
   ternaryplot(
     team_data[, 4:6], 
     id = team_data$player_full_name,
-    cex = 0.75, 
+    cex = 0.5, 
     newpage = FALSE, 
     dimnames_color = "red",
     border = "light grey",
