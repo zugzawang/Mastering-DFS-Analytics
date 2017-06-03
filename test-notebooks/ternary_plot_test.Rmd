@@ -10,8 +10,11 @@ output: html_notebook
 #   build_vignettes = TRUE
 # )
 library(dfstools)
-library(tidyverse)
 library(archetypes)
+library(DT)
+library(tibble)
+library(dplyr)
+library(vcd)
 ```
 
 ## Get data
@@ -23,29 +26,75 @@ playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-f
 ## Run model
 ```{r}
 arch_search <- archetype_search(playerbox)
-screeplot(arch_search)
-arch_model <- archetypal_analysis(playerbox)
-player_table <- arch_model$player_table
-archetypes <- arch_model$archetypes
-player_table <- player_table %>% dplyr::filter(Bench < 0.99)
-save(arch_model, archetypes, player_table, playerbox, file = "~/Projects/mastering-dfs-analytics-package/test-notebooks/ternary-data.RData")
-dtx <- player_table
-dtx[, 4:7] <- round(dtx[, 4:7], 4)
-DT::datatable(dtx)
+screeplot(arch_search$arch_results)
+```
+
+## Look at the three-archetype result in detail
+
+### Parallel coordinate plot with the archetypes
+```{r}
+best_model <- bestModel(arch_search$arch_results[[3]])
+archetype_table <- round(t(parameters(best_model)), 1) %>%
+  as.data.frame() %>%
+  rownames_to_column()
+pcplot(best_model, arch_search$arch_input$pbs_summary)
+```
+### Name the archetypes
+```{r}
+colnames(archetype_table)[1] <- "Metric"
+
+# The one with the fewest minutes we'll call "Bench"
+minutes <- as.vector(filter(archetype_table, Metric == "min"))[2:4]
+ixbench <- which.min(minutes) + 1
+colnames(archetype_table)[ixbench] <- "Bench"
+
+# The one with the most rebounds we'll call "Rim"
+rebounds <- as.vector(filter(archetype_table, Metric == "tot"))[2:4]
+ixrim <- which.max(rebounds) + 1
+colnames(archetype_table)[ixrim] <- "Rim"
+
+# The one with the most threes we'll call "Arc"
+threes <- as.vector(filter(archetype_table, Metric == "x3p"))[2:4]
+ixarc <- which.max(threes) + 1
+colnames(archetype_table)[ixarc] <- "Arc"
+
+# Show 'em!
+datatable(archetype_table, rownames = FALSE, filter = "top")
+```
+### Player table
+```{r}
+
+player_table <- bind_cols(
+  arch_search$arch_input$current_team,
+  coefficients(best_model, "alphas") %>%
+    as.data.frame()
+)
+colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
+datatable(player_table, rownames = FALSE, filter = "top")
 ```
 
 ## Generate team plots
 ```{r}
-teams <- sort(unique(as.character(player_table$Team)))
+teams <- sort(unique(as.character(player_table$own_team)))
 for (t in teams) {
   team_data <- player_table %>% 
-    dplyr::filter(Team == t) %>% dplyr::top_n(12, Overall) %>% dplyr::arrange(desc(Overall))
-  ternary_plot(
-    player_table = team_data, 
-    plot_title = t, 
-    top_label = "Back", 
-    left_label = "Front") %>% print()
-  filename <- paste(t, "pdf", sep = ".")
-  ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
+    filter(own_team == t) %>% 
+    top_n(12, 1 - Bench) %>% 
+    arrange(desc(1 - Bench))
+  pdf(
+    file = paste(t, "pdf", sep = "." ),
+    width = 8.5,
+    height = 8.5
+  )
+  ternaryplot(
+    team_data[, 4:6], 
+    id = team_data$player_full_name,
+    cex = 0.75, 
+    newpage = FALSE, 
+    dimnames_color = "red",
+    border = "light grey",
+    grid_color = "light grey",
+    main = t)
+  dev.off()
 }
 ```
