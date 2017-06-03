@@ -20,14 +20,16 @@ archetype_prep <- function(pbs) {
     group_by(player_full_name) %>%
     filter(date == max(date)) %>%
     select("player_full_name", "position", "own_team") %>%
-    ungroup()
+    ungroup() %>%
+    arrange(player_full_name)
   leftmost <- 8 # leftmost numeric in a box score row
   rightmost <- ncol(pbs) # rightmost numeric
   pbs_summary <- pbs %>%
-    select("player_full_name", leftmost:rightmost) %>%
+    select(player_full_name, leftmost:rightmost) %>%
     group_by(player_full_name) %>%
     summarize_if(is.numeric, sum, na.rm = TRUE) %>%
     ungroup() %>%
+    arrange(player_full_name) %>%
     column_to_rownames(var = "player_full_name") %>%
     as.matrix()
   return(list(current_team = current_team, pbs_summary = pbs_summary))
