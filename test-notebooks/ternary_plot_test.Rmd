@@ -67,12 +67,15 @@ datatable(archetype_table, rownames = FALSE, filter = "top")
 ```
 ### Player table
 ```{r}
-
+fantasy_points <- arch_search$arch_input$pbs_summary %>%
+  as_tibble() %>%
+  select(fdfp:games)
 player_table <- bind_cols(
   arch_search$arch_input$current_team,
-  coefficients(best_model, "alphas") %>%
-    as.data.frame()
-)
+  coefficients(best_model, "alphas") %>% round(3) %>% as_tibble(),
+  fantasy_points
+) %>%
+  arrange(desc(fdfp))
 colnames(player_table)[1:3] <- c("Player", "Position", "Team")
 colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
 datatable(player_table, rownames = FALSE, filter = "top")
@@ -83,7 +86,8 @@ team_summary <- player_table %>%
   group_by(Team) %>%
   summarize_if(is.numeric, sum, na.rm = TRUE) %>%
   ungroup() %>%
-  arrange(Bench)  
+  select(-games) %>%
+  arrange(desc(fdfp))  
 datatable(team_summary, rownames = FALSE, filter = "top")
 ```
 
