@@ -4,7 +4,14 @@
 }
 
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("player_full_name"))
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "player_full_name",
+  "Back",
+  "Bench",
+  "Front",
+  "Player",
+  "Player/Position"
+))
 
 #' @title Archetype Prep
 #' @name archetype_prep
@@ -69,4 +76,38 @@ archetype_search <- function(pbs) {
     verbose = FALSE,
     nrep = 64)
   return(list(arch_input = arch_input, arch_results = arch_results))
+}
+
+#' @title Ternary Plot
+#' @name ternary_plot
+#' @description a visualization of a set of players using `ggtern`
+#' @export ternary_plot
+#' @import ggtern
+#' @importFrom ggplot2 ggtitle
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 scale_fill_manual
+#' @param player_table a data frame with player archetype values
+#' @param plot_title the plot title
+#' @param top_label the label for the top apex (backcourt)
+#' @param left_label the label for the left apex (frontcourt)
+#' @return a `ggplot` object
+
+ternary_plot <- function(player_table, plot_title, top_label, left_label) {
+
+  # colour-blind-friendly palette
+  cbPalette <- RColorBrewer::brewer.pal(n = 12, name = "Set3")
+  xdata <- dplyr::mutate(
+    player_table,
+    `Player/Position` = paste(Player, Position, sep = "/"))
+  plot_object <- ggtern(
+    data = xdata, mapping =
+      aes(x = Front, y = Back, z = Bench)) +
+    geom_point(
+      aes(fill = `Player/Position`), shape = 21, color = "black", size = 7) +
+    theme_nomask() +
+    scale_fill_manual(values = cbPalette) +
+    ggtitle(plot_title) +
+    Tlab(top_label) +
+    Llab(left_label)
+  return(plot_object)
 }
