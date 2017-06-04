@@ -4,16 +4,12 @@
 \alias{ternary_plot}
 \title{Ternary Plot}
 \usage{
-ternary_plot(player_table, plot_title, top_label, left_label)
+ternary_plot(player_table, plot_title)
 }
 \arguments{
 \item{player_table}{a data frame with player archetype values}
 
 \item{plot_title}{the plot title}
-
-\item{top_label}{the label for the top apex (backcourt)}
-
-\item{left_label}{the label for the left apex (frontcourt)}
 }
 \value{
 a `ggplot` object

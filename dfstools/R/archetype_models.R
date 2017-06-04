@@ -88,11 +88,9 @@ archetype_search <- function(pbs) {
 #' @importFrom ggplot2 scale_fill_manual
 #' @param player_table a data frame with player archetype values
 #' @param plot_title the plot title
-#' @param top_label the label for the top apex (backcourt)
-#' @param left_label the label for the left apex (frontcourt)
 #' @return a `ggplot` object
 
-ternary_plot <- function(player_table, plot_title, top_label, left_label) {
+ternary_plot <- function(player_table, plot_title) {
 
   # colour-blind-friendly palette
   cbPalette <- RColorBrewer::brewer.pal(n = 12, name = "Set3")
@@ -107,7 +105,7 @@ ternary_plot <- function(player_table, plot_title, top_label, left_label) {
     theme_nomask() +
     scale_fill_manual(values = cbPalette) +
     ggtitle(plot_title) +
-    Tlab(top_label) +
-    Llab(left_label)
+    Tlab("Back") +
+    Llab("Front")
   return(plot_object)
 }
