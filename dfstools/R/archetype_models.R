@@ -39,9 +39,6 @@ archetype_prep <- function(pbs) {
     arrange(player_full_name) %>%
     column_to_rownames(var = "player_full_name") %>%
     as.matrix()
-  View(pbs)
-  View(pbs_summary)
-  # stop("Testing")
   return(list(current_team = current_team, pbs_summary = pbs_summary))
 }
 
