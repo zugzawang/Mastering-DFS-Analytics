@@ -131,9 +131,9 @@ playerboxscore <- function(spreadsheet, sheet_number = 1) {
   count <- .dd(df$tot) + .dd(df$a) + .dd(df$st) + .dd(df$bl) + .dd(df$pts)
   df$ddbl <- as.integer(count >= 2)
   df$tdbl <- as.integer(count >= 3)
-  df$draftkings_points <- draftkings_points(df)
-  df$fanduel_points <- fanduel_points(df)
-  df$yahoo_points <- yahoo_points(df)
+  df$dkfp <- draftkings_points(df)
+  df$fdfp <- fanduel_points(df)
+  df$yfp <- yahoo_points(df)
   df$games <- 1
 
   # result
