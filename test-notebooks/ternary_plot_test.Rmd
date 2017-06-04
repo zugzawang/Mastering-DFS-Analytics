@@ -11,16 +11,17 @@ output: html_notebook
 # )
 library(dfstools)
 library(archetypes)
-library(DT)
+if (!require(DT)) install.packages("DT"); library(DT)
+if (!require(knitr)) install.packages("knitr"); library(knitr)
 library(tibble)
 library(dplyr)
-library(vcd)
+if (!require(vcd)) install.packages("vcd"); library(vcd)
 ```
 
 ## Get data
 ```{r}
 # playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-feed-04-12-2017.xlsx")
-playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-06-02-2017.xlsx")
+playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-06-03-2017.xlsx")
 ```
 
 ## Run model
@@ -97,12 +98,12 @@ for (t in teams) {
   ternaryplot(
     team_data[, 4:6], 
     id = team_data$player_full_name,
-    cex = 0.5, 
     newpage = FALSE, 
     dimnames_color = "red",
     border = "light grey",
     grid_color = "light grey",
-    main = t)
+    main = t
+  )
   dev.off()
 }
 ```
