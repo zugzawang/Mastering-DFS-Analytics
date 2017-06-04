@@ -1,3 +1,8 @@
+# internal function to select_if non-zero columns
+.any_non_zero <- function(x) {
+  any(x != 0)
+}
+
 #' @title Archetype Prep
 #' @name archetype_prep
 #' @description prepare a plaer box score for archetypal analysis
@@ -30,9 +35,13 @@ archetype_prep <- function(pbs) {
     group_by(player_full_name) %>%
     summarize_if(is.numeric, sum, na.rm = TRUE) %>%
     ungroup() %>%
+    select_if(.any_non_zero) %>%
     arrange(player_full_name) %>%
     column_to_rownames(var = "player_full_name") %>%
     as.matrix()
+  View(pbs)
+  View(pbs_summary)
+  # stop("Testing")
   return(list(current_team = current_team, pbs_summary = pbs_summary))
 }
 
