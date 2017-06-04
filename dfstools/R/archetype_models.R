@@ -3,6 +3,9 @@
   any(x != 0)
 }
 
+## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("player_full_name"))
+
 #' @title Archetype Prep
 #' @name archetype_prep
 #' @description prepare a plaer box score for archetypal analysis
