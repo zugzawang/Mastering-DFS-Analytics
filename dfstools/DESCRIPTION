@@ -17,4 +17,8 @@ Imports: archetypes,
     readr,
     tibble,
     lubridate,
-    readxl
+    readxl,
+    RColorBrewer,
+    DT,
+    knitr,
+    rmarkdown
