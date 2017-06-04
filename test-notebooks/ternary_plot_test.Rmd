@@ -19,8 +19,8 @@ library(vcd)
 
 ## Get data
 ```{r}
-playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-feed-04-12-2017.xlsx")
-# playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-05-28-2017.xlsx")
+# playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-feed-04-12-2017.xlsx")
+playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-06-02-2017.xlsx")
 ```
 
 ## Run model
@@ -71,6 +71,15 @@ player_table <- bind_cols(
 )
 colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
 datatable(player_table, rownames = FALSE, filter = "top")
+```
+## Generate team summary table
+```{r}
+team_summary <- player_table %>%
+  group_by(own_team) %>%
+  summarize_if(is.numeric, sum, na.rm = TRUE) %>%
+  ungroup() %>%
+  arrange(Bench)  
+datatable(team_summary, rownames = FALSE, filter = "top")
 ```
 
 ## Generate team plots
