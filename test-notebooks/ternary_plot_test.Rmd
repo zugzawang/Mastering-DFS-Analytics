@@ -98,11 +98,9 @@ datatable(team_summary, rownames = FALSE, filter = "top")
 
 ## Generate team plots
 ```{r}
-teams <- sort(unique(as.character(player_table$Team)))
-for (t in teams) {
+for (t in team_summary$Team) {
   team_data <- player_table %>% 
-    filter(Team == t) %>% top_n(12, fdfp_per_g) %>% 
-    arrange(Bench)
+    filter(Team == t) %>% top_n(12, fdfp_per_g)
   ternary_plot(
     player_table = team_data, 
     plot_title = t) %>% print()
