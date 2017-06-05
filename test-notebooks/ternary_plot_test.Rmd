@@ -18,8 +18,8 @@ library(dplyr)
 
 ## Get data
 ```{r}
-# playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-feed-04-12-2017.xlsx")
-playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-06-03-2017.xlsx")
+playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-feed-04-12-2017.xlsx")
+# playerbox <- playerboxscore("~/Dropbox/17-wnba-player/wnba-season-player-feed-06-03-2017.xlsx")
 ```
 
 ## Run model
@@ -69,13 +69,18 @@ datatable(archetype_table, rownames = FALSE, filter = "top")
 ```{r}
 fantasy_points <- arch_search$arch_input$pbs_summary %>%
   as_tibble() %>%
-  select(fdfp:games)
+  select(fdfp:games) %>%
+  transmute(
+    fdfp_per_g = round(fdfp / games, 2),
+    dkfp_per_g = round(dkfp / games, 2),
+    yfp_per_g = round(yfp / games, 2),
+    games = games)
 player_table <- bind_cols(
   arch_search$arch_input$current_team,
   coefficients(best_model, "alphas") %>% round(3) %>% as_tibble(),
   fantasy_points
 ) %>%
-  arrange(desc(fdfp))
+  arrange(desc(fdfp_per_g))
 colnames(player_table)[1:3] <- c("Player", "Position", "Team")
 colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
 datatable(player_table, rownames = FALSE, filter = "top")
@@ -87,7 +92,7 @@ team_summary <- player_table %>%
   summarize_if(is.numeric, sum, na.rm = TRUE) %>%
   ungroup() %>%
   select(-games) %>%
-  arrange(desc(fdfp))  
+  arrange(desc(fdfp_per_g))  
 datatable(team_summary, rownames = FALSE, filter = "top")
 ```
 
@@ -96,7 +101,7 @@ datatable(team_summary, rownames = FALSE, filter = "top")
 teams <- sort(unique(as.character(player_table$Team)))
 for (t in teams) {
   team_data <- player_table %>% 
-    filter(Team == t) %>% top_n(-12, Bench) %>% 
+    filter(Team == t) %>% top_n(12, fdfp_per_g) %>% 
     arrange(Bench)
   ternary_plot(
     player_table = team_data, 
