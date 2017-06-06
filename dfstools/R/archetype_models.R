@@ -9,8 +9,10 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "Back",
   "Bench",
   "Front",
+  "own_team",
   "Player",
-  "Player/Position"
+  "Player/Position",
+  "position"
 ))
 
 #' @title Archetype Prep
@@ -86,6 +88,7 @@ archetype_search <- function(pbs) {
 #' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 scale_fill_manual
+#' @importFrom ggplot2 scale_colour_manual
 #' @param player_table a data frame with player archetype values
 #' @param plot_title the plot title
 #' @return a `ggplot` object
@@ -93,7 +96,7 @@ archetype_search <- function(pbs) {
 ternary_plot <- function(player_table, plot_title) {
 
   # colour-blind-friendly palette
-  cbPalette <- RColorBrewer::brewer.pal(n = 12, name = "Set3")
+  cbPalette <- RColorBrewer::brewer.pal(n = 12, name = "Paired")
   xdata <- dplyr::mutate(
     player_table,
     `Player/Position` = paste(Player, Position, sep = "/"))
@@ -101,9 +104,9 @@ ternary_plot <- function(player_table, plot_title) {
     data = xdata, mapping =
       aes(x = Front, y = Back, z = Bench)) +
     geom_point(
-      aes(fill = `Player/Position`), shape = 21, color = "black", size = 7) +
+      aes(colour = `Player/Position`, shape = `Position`), size = 5) +
     theme_nomask() +
-    scale_fill_manual(values = cbPalette) +
+    scale_colour_manual(values = cbPalette) +
     ggtitle(plot_title) +
     Tlab("Back") +
     Llab("Front")
