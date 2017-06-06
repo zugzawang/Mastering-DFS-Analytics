@@ -1,6 +1,9 @@
 ---
 title: "Ternary Plot Test"
-output: html_notebook
+output:
+  html_notebook: 
+    theme: readable
+  html_document: default
 ---
 
 ## Libraries
@@ -14,6 +17,7 @@ library(archetypes)
 library(DT)
 library(tibble)
 library(dplyr)
+library(Rmixmod)
 ```
 
 ## Get data
@@ -67,9 +71,12 @@ datatable(archetype_table, rownames = FALSE, filter = "top")
 ```
 ### Player table
 ```{r}
-fantasy_points <- arch_search$arch_input$pbs_summary %>%
+pbs_summary <- arch_search$arch_input$pbs_summary %>%
   as_tibble() %>%
-  select(fdfp:games)
+  mutate(fdfp_per_g = round(fdfp / games, 2))
+fantasy_points <- pbs_summary %>%
+  as_tibble() %>%
+  select(fdfp:fdfp_per_g)
 player_table <- bind_cols(
   arch_search$arch_input$current_team,
   coefficients(best_model, "alphas") %>% round(3) %>% as_tibble(),
@@ -80,13 +87,25 @@ colnames(player_table)[1:3] <- c("Player", "Position", "Team")
 colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
 datatable(player_table, rownames = FALSE, filter = "top")
 ```
+## Player clusters
+```{r}
+front_back_cluster <- mixmodCluster(
+  dplyr::select(player_table, Front, Back, fdfp_per_g) %>% 
+    dplyr::filter(fdfp_per_g > 5), 1:12)
+plot(front_back_cluster)
+bench_cluster <- mixmodCluster(
+  dplyr::select(player_table, Bench, fdfp_per_g) %>% 
+    dplyr::filter(fdfp_per_g > 5), 1:12)
+plot(bench_cluster)
+```
+
 ## Generate team summary table
 ```{r}
 team_summary <- player_table %>%
   group_by(Team) %>%
   summarize_if(is.numeric, sum, na.rm = TRUE) %>%
   ungroup() %>%
-  select(-games) %>%
+  select(-games, fdfp_per_g) %>%
   arrange(Bench)  
 datatable(team_summary, rownames = FALSE, filter = "top")
 ```
