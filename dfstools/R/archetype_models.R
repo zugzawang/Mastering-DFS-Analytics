@@ -35,7 +35,7 @@ archetype_prep <- function(pbs) {
   current_team <- pbs %>%
     group_by(player_full_name) %>%
     filter(date == max(date)) %>%
-    select("player_full_name", "position", "own_team") %>%
+    select(player_full_name, position, own_team) %>%
     ungroup() %>%
     arrange(player_full_name)
   leftmost <- 8 # leftmost numeric in a box score row
