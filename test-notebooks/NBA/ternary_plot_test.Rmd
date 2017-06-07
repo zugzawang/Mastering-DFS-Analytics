@@ -1,0 +1,125 @@
+---
+title: "Ternary Plot Test"
+output:
+  html_notebook: 
+    theme: readable
+  html_document: default
+---
+
+## Libraries
+```{r message=FALSE}
+# devtools::install(
+#   "~/Projects/Mastering-DFS-Analytics/dfstools/",
+#   build_vignettes = TRUE
+# )
+library(dfstools)
+library(archetypes)
+library(DT)
+library(tibble)
+library(dplyr)
+library(Rmixmod)
+library(ggtern)
+```
+
+## Get data
+```{r}
+playerbox <- playerboxscore("~/Dropbox/16-17-player-data/archive/season-player-feed-04-12-2017.xlsx")
+```
+
+## Run model
+```{r message=FALSE, error=FALSE, warning=FALSE}
+arch_search <- archetype_search(playerbox)
+screeplot(arch_search$arch_results)
+```
+
+## Look at the three-archetype result in detail
+
+### Parallel coordinate plot with the archetypes
+```{r}
+old_par <- par(las = 2)
+best_model <- bestModel(arch_search$arch_results[[3]])
+archetype_table <- round(t(parameters(best_model)), 1) %>%
+  as.data.frame() %>%
+  rownames_to_column()
+pcplot(
+  best_model, 
+  arch_search$arch_input$pbs_summary, 
+  atypes.col = c("red", "dark green", "blue"))
+par(old_par)
+```
+### Name the archetypes
+```{r}
+colnames(archetype_table)[1] <- "Metric"
+
+# The one with the fewest minutes we'll call "Bench"
+minutes <- as.vector(filter(archetype_table, Metric == "min"))[2:4]
+ixbench <- which.min(minutes) + 1
+colnames(archetype_table)[ixbench] <- "Bench"
+
+# The one with the most rebounds we'll call "Front" (frontcourt)
+rebounds <- as.vector(filter(archetype_table, Metric == "tot"))[2:4]
+ixfront <- which.max(rebounds) + 1
+colnames(archetype_table)[ixfront] <- "Front"
+
+# The one with the most threes we'll call "Back"
+threes <- as.vector(filter(archetype_table, Metric == "x3p"))[2:4]
+ixback <- which.max(threes) + 1
+colnames(archetype_table)[ixback] <- "Back"
+
+# Show 'em!
+datatable(archetype_table, rownames = FALSE, filter = "top")
+```
+### Player table
+```{r}
+pbs_summary <- arch_search$arch_input$pbs_summary %>%
+  as_tibble() %>%
+  mutate(fdfp_per_g = round(fdfp / games, 2))
+fantasy_points <- pbs_summary %>%
+  as_tibble() %>%
+  select(fdfp:fdfp_per_g)
+player_table <- bind_cols(
+  arch_search$arch_input$current_team,
+  coefficients(best_model, "alphas") %>% round(3) %>% as_tibble(),
+  fantasy_points
+) %>%
+  arrange(desc(fdfp))
+colnames(player_table)[1:3] <- c("Player", "Position", "Team")
+colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
+datatable(player_table, rownames = FALSE, filter = "top")
+```
+## Player clusters
+```{r}
+front_back_cluster <- mixmodCluster(
+  dplyr::select(player_table, Front, Back, fdfp_per_g) %>% 
+    dplyr::filter(fdfp_per_g > 5), 1:12)
+plot(front_back_cluster)
+bench_cluster <- mixmodCluster(
+  dplyr::select(player_table, Bench, fdfp_per_g) %>% 
+    dplyr::filter(fdfp_per_g > 5), 1:12)
+plot(bench_cluster)
+```
+
+## Generate team summary table
+```{r}
+team_summary <- player_table %>%
+  group_by(Team) %>%
+  summarize_if(is.numeric, sum, na.rm = TRUE) %>%
+  ungroup() %>%
+  select(-games, -fdfp_per_g) %>%
+  arrange(Bench)  
+datatable(team_summary, rownames = FALSE, filter = "top")
+```
+
+## Generate team plots
+```{r}
+for (t in team_summary$Team) {
+  team_data <- player_table %>% 
+    filter(Team == t) %>% top_n(12, fdfp)
+  plot <- ternary_plot(
+    player_table = team_data, 
+    plot_title = t)
+  print(plot)
+  filename <- paste(t, "pdf", sep = ".")
+  ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
+}
+```
