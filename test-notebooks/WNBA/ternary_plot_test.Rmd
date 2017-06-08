@@ -19,6 +19,7 @@ library(tibble)
 library(dplyr)
 library(Rmixmod)
 library(ggtern)
+library(readr)
 ```
 
 ## Get data
@@ -158,8 +159,44 @@ for (t in team_summary$Team) {
 ```{r}
 projection_input <- playerbox %>%
   full_join(
-    {player_table %>% select(Player, Bench, Back, Front, Games)},
-    by = c("player_full_name" = "Player"))
+    {player_table %>% select(Player, Bench, Back, Front, games)},
+    by = c("player_full_name" = "Player")) %>%
+  filter(fdfp >= 0) %>%
+  select(date:min, fdfp, Bench:Front, games = games.y)
+rx <- projection_input$venue_r_h == "R"
+projection_input$venue_r_h[rx] <- "Road"
+hx <- projection_input$venue_r_h == "H"
+projection_input$venue_r_h[hx] <- "Home"
 View(projection_input)
+
+points_model <- glm(
+  fdfp ~ player_full_name + opp_team + venue_r_h,
+  data = projection_input,
+  family = quasipoisson)
+points_tidy <- tidy(points_model) %>%
+  filter(p.value <= 0.1) %>%
+  arrange(desc(estimate))
+View(points_tidy)
+points_augment <- augment(
+  points_model, data = projection_input,
+  type.predict = "response") %>%
+  select(-.se.fit, -.resid, -.hat, -.sigma, -.cooksd, -.std.resid) %>%
+  mutate(delta = fdfp - .fitted)
+View(points_augment)
+
+minutes_model <- glm(
+  min ~ player_full_name + opp_team + venue_r_h,
+  data = projection_input,
+  family = quasipoisson)
+minutes_tidy <- tidy(minutes_model) %>%
+  filter(p.value <= 0.1) %>%
+  arrange(desc(estimate))
+View(minutes_tidy)
+minutes_augment <- augment(
+  minutes_model, data = projection_input,
+  type.predict = "response") %>%
+  select(-.se.fit, -.resid, -.hat, -.sigma, -.cooksd, -.std.resid) %>%
+  mutate(delta = min - .fitted)
+View(minutes_augment)
 ```
 
