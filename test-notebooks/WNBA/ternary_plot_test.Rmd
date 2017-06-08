@@ -104,9 +104,16 @@ ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
 ## Player clusters
 ```{r}
 front_back_cluster <- mixmodCluster(
-  dplyr::select(player_table, Front, Back, fdfp_per_g) %>% 
-    dplyr::filter(fdfp_per_g > 5), 1:12)
+  dplyr::select(player_table, Front, Back, fdfp_per_g), 1:12
+)
 plot(front_back_cluster)
+front_back_model <- glm(
+  fdfp_per_g ~ Front + Back, 
+  data = (player_table %>% filter(Bench < 0.5)),
+  family = quasipoisson
+)
+summary(front_back_model)
+print(anova(front_back_model))
 bench_cluster <- mixmodCluster(
   dplyr::select(player_table, Bench, fdfp_per_g) %>% 
     dplyr::filter(fdfp_per_g > 5), 1:12)
