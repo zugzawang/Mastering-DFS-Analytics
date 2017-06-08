@@ -1,5 +1,5 @@
 ---
-title: "Ternary Plot Test"
+title: "WNBA Archetypes"
 output:
   html_notebook: 
     theme: readable
@@ -26,6 +26,15 @@ library(ggtern)
 playerbox <- playerboxscore(
   "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-07-2017.xlsx"
 )
+View(playerbox)
+slate <- read_csv(
+  "/home/Projects/draftkings/contest-standings/wnba/20170608/FanDuel-WNBA-2017-06-09-19631-players-list.csv",
+  col_types = cols(
+    X14 = col_skip(), 
+    X15 = col_skip()
+  )
+) 
+View(slate)
 ```
 
 ## Run model
@@ -144,3 +153,13 @@ for (t in team_summary$Team) {
   ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
 }
 ```
+
+## Projection model
+```{r}
+projection_input <- playerbox %>%
+  full_join(
+    {player_table %>% select(Player, Bench, Back, Front, Games)},
+    by = c("player_full_name" = "Player"))
+View(projection_input)
+```
+
