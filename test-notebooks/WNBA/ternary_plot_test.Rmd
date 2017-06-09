@@ -31,14 +31,6 @@ playerbox <- playerboxscore(
   "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-07-2017.xlsx"
 )
 View(playerbox)
-slate <- read_csv(
-  "/home/Projects/draftkings/contest-standings/wnba/20170608/FanDuel-WNBA-2017-06-09-19631-players-list.csv",
-  col_types = cols(
-    X14 = col_skip(), 
-    X15 = col_skip()
-  )
-) 
-View(slate)
 ```
 
 ## Run model
