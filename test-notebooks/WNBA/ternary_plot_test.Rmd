@@ -4,6 +4,8 @@ output:
   html_notebook: 
     theme: readable
   html_document: default
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ## Libraries
@@ -20,6 +22,7 @@ library(dplyr)
 library(Rmixmod)
 library(ggtern)
 library(readr)
+library(broom)
 ```
 
 ## Get data
