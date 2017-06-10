@@ -26,7 +26,7 @@ library(readr)
 ## Get data
 ```{r}
 playerbox <- playerboxscore(
-  "~/Dropbox/wnba-season-player-feed-06-07-2017.xlsx"
+    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-09-2017.xlsx"
 )
 gamebox <- gameboxscore(playerbox)
 ```
@@ -74,6 +74,8 @@ new_rows <- tribble(
 View(new_rows)
 prediction <- game_predict(season_model, new_rows)
 View(prediction)
+score_table <- rank_scores(prediction)
+View(score_table)
 ```
 
 
