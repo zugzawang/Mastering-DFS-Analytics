@@ -26,7 +26,8 @@ game_predict <-
     aug_schedule <- dplyr::mutate(
       aug_schedule,
       total_p =  home_score_p + away_score_p,
-      home_mov_p = home_score_p - away_score_p)
+      home_mov_p = home_score_p - away_score_p,
+      home_ratio_p = home_score_p / away_score_p)
   }
 
   # are there Poisson score ratings?
@@ -46,7 +47,8 @@ game_predict <-
     aug_schedule <- dplyr::mutate(
       aug_schedule,
       total_p = home_score_p + away_score_p,
-      home_mov_p = home_score_p - away_score_p)
+      home_mov_p = home_score_p - away_score_p,
+      home_ratio_p = home_score_p / away_score_p)
   }
 
   # are there binomial win probability ratings?
@@ -86,14 +88,16 @@ rank_scores <- function(aug_schedule) {
       opponent = home,
       score_p = away_score_p,
       total_p,
-      home_mov_p),
+      home_mov_p,
+      home_ratio_p),
     dplyr::select(
       aug_schedule,
       team = home,
       opponent = away,
       score_p = home_score_p,
       total_p,
-      home_mov_p)
+      home_mov_p,
+      home_ratio_p)
     ) %>%
     dplyr::arrange(dplyr::desc(score_p)))
 }
