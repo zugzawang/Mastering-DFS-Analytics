@@ -56,7 +56,6 @@ salaries <- read_csv(
     X15 = col_skip()
   )
 )
-View(salaries)
 decoder <- tribble(
   ~fanduel, ~bigdataball,
   "PHO", "Phoenix",
@@ -66,17 +65,15 @@ decoder <- tribble(
   "CHI", "Chicago",
   "SA", "San Antonio"
 )
-new_rows <- tribble(
-  ~away, ~home,
-  "Los Angeles", "Phoenix",
-  "Atlanta", "Connecticut",
-  "Chicago", "San Antonio"
-)
-View(new_rows)
+new_rows <- salaries$Game %>%
+  unique() %>%
+  stringr::str_split_fixed(pattern = "@", n = 2) %>%
+  as_tibble() %>%
+  left_join(decoder, by = c("V1" = "fanduel")) %>%
+  left_join(decoder, by = c("V2" = "fanduel")) %>%
+  select(away = bigdataball.x, home = bigdataball.y)
 prediction <- game_predict(season_model, new_rows)
 View(prediction)
 score_table <- rank_scores(prediction)
 View(score_table)
 ```
-
-
