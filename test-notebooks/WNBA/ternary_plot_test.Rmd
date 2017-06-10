@@ -7,7 +7,6 @@ output:
 editor_options: 
   chunk_output_type: inline
 ---
-
 ## Libraries
 ```{r message=FALSE}
 # devtools::install(
@@ -24,11 +23,10 @@ library(ggtern)
 library(readr)
 library(broom)
 ```
-
 ## Get data
 ```{r}
 playerbox <- playerboxscore(
-  "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-07-2017.xlsx"
+  "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-09-2017.xlsx"
 )
 View(playerbox)
 ```
@@ -105,7 +103,6 @@ print(plot)
 filename <- "top_twelve.pdf"
 ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
 ```
-
 ## Player clusters
 ```{r}
 front_back_cluster <- mixmodCluster(
@@ -124,18 +121,6 @@ bench_cluster <- mixmodCluster(
     dplyr::filter(fdfp_per_g > 5), 1:12)
 plot(bench_cluster)
 ```
-
-## Generate team summary table
-```{r}
-team_summary <- player_table %>%
-  group_by(Team) %>%
-  summarize_if(is.numeric, sum, na.rm = TRUE) %>%
-  ungroup() %>%
-  select(-games, -fdfp_per_g) %>%
-  arrange(Bench)  
-datatable(team_summary, rownames = FALSE, filter = "top")
-```
-
 ## Generate team plots
 ```{r}
 for (t in team_summary$Team) {
@@ -149,7 +134,6 @@ for (t in team_summary$Team) {
   ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
 }
 ```
-
 ## Projection model
 ```{r}
 projection_input <- playerbox %>%
@@ -158,10 +142,6 @@ projection_input <- playerbox %>%
     by = c("player_full_name" = "Player")) %>%
   filter(fdfp >= 0) %>%
   select(date:min, fdfp, Bench:Front, games = games.y)
-rx <- projection_input$venue_r_h == "R"
-projection_input$venue_r_h[rx] <- "Road"
-hx <- projection_input$venue_r_h == "H"
-projection_input$venue_r_h[hx] <- "Home"
 View(projection_input)
 
 points_model <- glm(
@@ -194,4 +174,3 @@ minutes_augment <- augment(
   mutate(delta = min - .fitted)
 View(minutes_augment)
 ```
-
