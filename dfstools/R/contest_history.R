@@ -1,8 +1,6 @@
 #' @title Read DraftKings Contest History
 #' @name read_draftkings_contest_history
 #' @description Read a DraftKings contest history CSV into a tibble
-#' @import readr
-#' @importFrom lubridate ymd_hms
 #' @export read_draftkings_contest_history
 #' @param file CSV history file from DraftKings
 #' @return a tibble of the contest history
@@ -13,7 +11,7 @@
 #' }
 
 read_draftkings_contest_history <- function(file) {
-	df <- read_csv(file, col_types = cols(
+	df <- readr::read_csv(file, col_types = cols(
     Contest_Date_EST = col_character(),
     Entry_Fee = col_number(),
     Prize_Pool = col_number(),
