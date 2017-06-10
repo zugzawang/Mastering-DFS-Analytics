@@ -46,4 +46,34 @@ season_model <- build_model(game_data)
 back_prediction <- game_predict(season_model, game_data)
 ```
 
+## get the new rows
+```{r}
+salaries <- read_csv(
+  "/home/Projects/draftkings/contest-standings/wnba/20170610/FanDuel-WNBA-2017-06-10-19655-players-list.csv",
+  col_types = cols(
+    X14 = col_skip(),
+    X15 = col_skip()
+  )
+)
+View(salaries)
+decoder <- tribble(
+  ~fanduel, ~bigdataball,
+  "PHO", "Phoenix",
+  "LA", "Los Angeles",
+  "ATL", "Atlanta",
+  "CON", "Connecticut",
+  "CHI", "Chicago",
+  "SA", "San Antonio"
+)
+new_rows <- tribble(
+  ~away, ~home,
+  "Los Angeles", "Phoenix",
+  "Atlanta", "Connecticut",
+  "Chicago", "San Antonio"
+)
+View(new_rows)
+prediction <- game_predict(season_model, new_rows)
+View(prediction)
+```
+
 
