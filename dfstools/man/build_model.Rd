@@ -4,7 +4,7 @@
 \alias{build_model}
 \title{Build model}
 \usage{
-build_model(game_data, method = "N", first.order = TRUE)
+build_model(game_data, method = "PB1", first.order = TRUE)
 }
 \arguments{
 \item{game_data}{a game.data input file}
