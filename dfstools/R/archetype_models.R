@@ -20,14 +20,6 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @description prepare a plaer box score for archetypal analysis
 #' @export archetype_prep
 #' @importFrom dplyr %>%
-#' @importFrom dplyr group_by
-#' @importFrom dplyr select
-#' @importFrom dplyr select_if
-#' @importFrom dplyr filter
-#' @importFrom dplyr ungroup
-#' @importFrom dplyr summarize_if
-#' @importFrom dplyr arrange
-#' @importFrom tibble column_to_rownames
 #' @param pbs player box score
 #' @return an "as" object from archetypes::stepArchetypes
 
@@ -35,21 +27,21 @@ archetype_prep <- function(pbs) {
 
   # figure out which team each player is currently on
   current_team <- pbs %>%
-    group_by(player_full_name) %>%
-    filter(date == max(date)) %>%
-    select(player_full_name, position, own_team) %>%
-    ungroup() %>%
-    arrange(player_full_name)
+    dplyr::group_by(player_full_name) %>%
+    dplyr::filter(date == max(date)) %>%
+    dplyr::select(player_full_name, position, own_team) %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(player_full_name)
   leftmost <- 8 # leftmost numeric in a box score row
   rightmost <- ncol(pbs) # rightmost numeric
   pbs_summary <- pbs %>%
-    select(player_full_name, leftmost:rightmost) %>%
-    group_by(player_full_name) %>%
-    summarize_if(is.numeric, sum, na.rm = TRUE) %>%
-    ungroup() %>%
-    select_if(.any_non_zero) %>%
-    arrange(player_full_name) %>%
-    column_to_rownames(var = "player_full_name") %>%
+    dplyr::select(player_full_name, leftmost:rightmost) %>%
+    dplyr::group_by(player_full_name) %>%
+    dplyr::summarize_if(is.numeric, sum, na.rm = TRUE) %>%
+    dplyr::ungroup() %>%
+    dplyr::select_if(.any_non_zero) %>%
+    dplyr::arrange(player_full_name) %>%
+    tibble::column_to_rownames(var = "player_full_name") %>%
     as.matrix()
   return(list(current_team = current_team, pbs_summary = pbs_summary))
 }
@@ -58,7 +50,6 @@ archetype_prep <- function(pbs) {
 #' @name archetype_search
 #' @description search for the best archetypal analysis of real box score values
 #' @export archetype_search
-#' @importFrom dplyr %>%
 #' @param pbs player box score
 #' @return an "as" object from archetypes::stepArchetypes
 
@@ -85,10 +76,9 @@ archetype_search <- function(pbs) {
 #' @description a visualization of a set of players using `ggtern`
 #' @export ternary_plot
 #' @import ggtern
-#' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 geom_point
-#' @importFrom ggplot2 scale_fill_manual
 #' @importFrom ggplot2 scale_colour_manual
+#' @importFrom ggplot2 ggtitle
 #' @param player_table a data frame with player archetype values
 #' @param plot_title the plot title
 #' @return a `ggplot` object
