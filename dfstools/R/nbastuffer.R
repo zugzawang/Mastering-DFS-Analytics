@@ -107,9 +107,6 @@ yahoo_points <- function(boxscore) {
 #' @description Creates a player box score data frame from an NBAStuffer spreadsheet
 #' @export playerboxscore
 #' @importFrom dplyr %>%
-#' @importFrom dplyr filter
-#' @importFrom lubridate mdy
-#' @importFrom readxl read_excel
 #' @param spreadsheet a file with an NBAStuffer player box score dataset
 #' @param sheet_number the sheet number within the spreadsheet (default 1)
 #' @return a data frame of the input spreadsheet, augmented with columns for double-doubles, triple doubles and fantasy points
@@ -120,12 +117,12 @@ yahoo_points <- function(boxscore) {
 #' }
 
 playerboxscore <- function(spreadsheet, sheet_number = 1) {
-  df <- read_excel(spreadsheet, sheet = sheet_number) %>%
-    filter(!is.na("DATE"))
+  df <- readxl::read_excel(spreadsheet, sheet = sheet_number) %>%
+    dplyr::filter(!is.na("DATE"))
   colnames(df) <- .sensible_column_names(df)
 
   # comparable date stamp
-  df$date <- mdy(df$date)
+  df$date <- lubridate::mdy(df$date)
 
   # compute double-double, triple-double and fantasy points
   count <- .dd(df$tot) + .dd(df$a) + .dd(df$st) + .dd(df$bl) + .dd(df$pts)
@@ -138,4 +135,32 @@ playerboxscore <- function(spreadsheet, sheet_number = 1) {
 
   # result
   return(df)
+}
+
+#' @title Make game box score data frame from player box score
+#' @name gameboxscore
+#' @description Creates a game box score data frame from a player box score data frame
+#' @export gameboxscore
+#' @importFrom dplyr %>%
+#' @param pbs a player box score data frame
+#' @return a data frame of game box scores
+#' @examples
+#' \dontrun{
+#' pbs2015 <- playerboxscore(
+#'   "~/Dropbox/15-16-player-data/season-player-feed-01-28-2016.xlsx")
+#' gbs2015 <- gameboxscore(pbs2015)
+#' }
+
+gameboxscore <- function(pbs) {
+  columns <- 8:25
+  df <- pbs %>% dplyr::group_by(
+    data_set,
+    date,
+    own_team,
+    opp_team,
+    venue_r_h
+  ) %>%
+    dplyr::summarize_if(is.numeric, sum, na.rm = TRUE) %>%
+    dplyr::ungroup()
+  return(as.data.frame(df))
 }
