@@ -168,5 +168,6 @@ gameboxscore <- function(pbs) {
     dplyr::summarize_if(is.numeric, sum, na.rm = TRUE) %>%
     dplyr::ungroup() %>%
     dplyr::select(-games)
+  df$min <- round(df$min, 0)
   return(as.data.frame(df))
 }
