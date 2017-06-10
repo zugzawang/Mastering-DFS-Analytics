@@ -28,7 +28,6 @@ library(broom)
 playerbox <- playerboxscore(
   "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-09-2017.xlsx"
 )
-View(playerbox)
 ```
 
 ## Run model
@@ -123,7 +122,7 @@ plot(bench_cluster)
 ```
 ## Generate team plots
 ```{r}
-for (t in team_summary$Team) {
+for (t in player_table$Team %>% unique()) {
   team_data <- player_table %>% 
     filter(Team == t) %>% top_n(12, fdfp)
   plot <- ternary_plot(
@@ -142,7 +141,6 @@ projection_input <- playerbox %>%
     by = c("player_full_name" = "Player")) %>%
   filter(fdfp >= 0) %>%
   select(date:min, fdfp, Bench:Front, games = games.y)
-View(projection_input)
 
 points_model <- glm(
   fdfp ~ player_full_name + opp_team + venue_r_h,
@@ -152,12 +150,6 @@ points_tidy <- tidy(points_model) %>%
   filter(p.value <= 0.1) %>%
   arrange(desc(estimate))
 View(points_tidy)
-points_augment <- augment(
-  points_model, data = projection_input,
-  type.predict = "response") %>%
-  select(-.se.fit, -.resid, -.hat, -.sigma, -.cooksd, -.std.resid) %>%
-  mutate(delta = fdfp - .fitted)
-View(points_augment)
 
 minutes_model <- glm(
   min ~ player_full_name + opp_team + venue_r_h,
@@ -167,10 +159,4 @@ minutes_tidy <- tidy(minutes_model) %>%
   filter(p.value <= 0.1) %>%
   arrange(desc(estimate))
 View(minutes_tidy)
-minutes_augment <- augment(
-  minutes_model, data = projection_input,
-  type.predict = "response") %>%
-  select(-.se.fit, -.resid, -.hat, -.sigma, -.cooksd, -.std.resid) %>%
-  mutate(delta = min - .fitted)
-View(minutes_augment)
 ```
