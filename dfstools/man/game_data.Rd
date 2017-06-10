@@ -2,14 +2,15 @@
 % Please edit documentation in R/rank_utils.R
 \name{game_data}
 \alias{game_data}
+\alias{collect_game_data}
 \title{Collect game data}
 \usage{
-game_data(gbs, pfunc, end_date)
+collect_game_data(gbs, pmg, end_date)
 }
 \arguments{
 \item{gbs}{game box score data frame}
 
-\item{pfunc}{a function mapping a box score data frame to a points vector, usually either real_points, draftkings_points, fanduel_points or yahoo_points}
+\item{pmg}{player minutes per game (240 for NBA, 200 for WNBA)}
 
 \item{end_date}{the latest date to use as input}
 }

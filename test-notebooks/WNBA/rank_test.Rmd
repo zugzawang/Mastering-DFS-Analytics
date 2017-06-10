@@ -1,0 +1,41 @@
+---
+title: "WNBA Archetypes"
+output:
+  html_notebook: 
+    theme: readable
+  html_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+## Libraries
+```{r message=FALSE}
+# devtools::install(
+#   "~/Projects/Mastering-DFS-Analytics/dfstools/",
+#   build_vignettes = TRUE
+# )
+library(dfstools)
+library(archetypes)
+library(DT)
+library(tibble)
+library(dplyr)
+library(ggtern)
+library(readr)
+```
+
+## Get data
+```{r}
+playerbox <- playerboxscore(
+  "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-07-2017.xlsx"
+)
+View(playerbox)
+gamebox <- gameboxscore(playerbox)
+View(gamebox)
+```
+
+## Collect model input
+```{r}
+game_data <- collect_game_data(gamebox, 200, '2017-06-09')
+View(game_data)
+```
+

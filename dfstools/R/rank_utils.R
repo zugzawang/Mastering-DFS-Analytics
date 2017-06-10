@@ -129,21 +129,19 @@ build_model <- function(game_data, method = "N", first.order = TRUE) {
 #' @title Collect game data
 #' @name game_data
 #' @description creates an input game data file for mvglmmRank
-#' @export game_data
+#' @export collect_game_data
 #' @importFrom dplyr %>%
 #' @param gbs game box score data frame
-#' @param pfunc a function mapping a box score data frame to a points vector, usually either real_points, draftkings_points, fanduel_points or yahoo_points
+#' @param pmg player minutes per game (240 for NBA, 200 for WNBA)
 #' @param end_date the latest date to use as input
 #' @return a game data dataframe
 
-game_data <- function(gbs, pfunc, end_date) {
+collect_game_data <- function(gbs, pmg, end_date) {
 
   # compute points and OT columns
-  pmg <- 240 # player-minutes per game
   pmo <- 25 # player-minutes per overtime
   df <- gbs
-  df$points <- pfunc(gbs)
-  df$OT <- (round(gbs$MIN, 0) - pmg) / pmo
+  df$ot <- (round(gbs$min, 0) - pmg) / pmo
   df <- dplyr::filter(df, date <= lubridate::ymd(end_date))
 
   # break out home and away data frames
@@ -154,14 +152,14 @@ game_data <- function(gbs, pfunc, end_date) {
     date = date,
     away = opp_team,
     home = own_team,
-    home.response = points)
+    home.response = pts)
   away.df <- dplyr::transmute(
     away.df,
     date = date,
     away = own_team,
     home = opp_team,
-    away.response = points,
-    OT = OT)
+    away.response = pts,
+    ot = ot)
   joined.df <- dplyr::full_join(away.df, home.df) %>%
     dplyr::mutate(
       total = home.response + away.response,
