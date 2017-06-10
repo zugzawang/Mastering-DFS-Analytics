@@ -44,6 +44,7 @@ season_model <- build_model(game_data)
 ## Back-predict for a test
 ```{r}
 back_prediction <- game_predict(season_model, game_data)
+backp_score_table <- rank_scores(back_prediction)
 ```
 
 ## get the new rows
