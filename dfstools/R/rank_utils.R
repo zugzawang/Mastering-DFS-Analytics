@@ -1,0 +1,174 @@
+#' @title Game predict
+#' @name game_predict
+#' @description Creates a data frame with game predictions
+#' @export game_predict
+#' @importFrom dplyr %>%
+#' @importFrom stats pnorm
+#' @param model a model from mvglmmRank::mvglmmRank
+#' @param schedule a data frame team names in "away" and "home" columns
+#' @return the schedule augmented with prediction columns
+
+game_predict <-
+  function(model, schedule) {
+  aug_schedule <- dplyr::mutate(schedule, method = model$method)
+
+  # are there normal score ratings?
+  if (!is.null(model$n.ratings.offense)) {
+    aug_schedule <- dplyr::mutate(
+      aug_schedule,
+      away_score_p =
+        model$n.mean["LocationAway"] +
+        model$n.ratings.offense[away] -
+        model$n.ratings.defense[home],
+      home_score_p =
+        model$n.mean["LocationHome"] +
+        model$n.ratings.offense[home] -
+        model$n.ratings.defense[away])
+    aug_schedule <- dplyr::mutate(
+      aug_schedule,
+      total_p =  home_score_p + away_score_p,
+      home_mov_p = home_score_p - away_score_p)
+  }
+
+  # are there Poisson score ratings?
+  if (!is.null(model$p.ratings.offense)) {
+    aug_schedule <- dplyr::mutate(
+      aug_schedule,
+      away_score_p =
+        exp(
+          model$p.mean["LocationAway"] +
+          model$p.ratings.offense[away] -
+          model$p.ratings.defense[home]),
+      home_score_p =
+        exp(
+          model$p.mean["LocationHome"] +
+          model$p.ratings.offense[home] -
+          model$p.ratings.defense[away]))
+    aug_schedule <- dplyr::mutate(
+      aug_schedule,
+      total_p = home_score_p + away_score_p,
+      home_mov_p = home_score_p - away_score_p)
+  }
+
+  # are there binomial win probability ratings?
+  if (!is.null(model$b.ratings)) {
+    aug_schedule <- dplyr::mutate(
+      aug_schedule,
+      home_prob_w =
+        pnorm(
+          model$b.mean +
+          model$b.ratings[home] -
+          model$b.ratings[away]))
+    aug_schedule <- dplyr::mutate(
+      aug_schedule,
+      away_prob_w = 1 - home_prob_w)
+    aug_schedule <- dplyr::mutate(
+      aug_schedule,
+      entropy =
+        -log2(home_prob_w) * home_prob_w - log2(away_prob_w) * away_prob_w)
+  }
+
+  return(aug_schedule)
+}
+
+#' @title Rank predicted scores
+#' @name rank_scores
+#' @description rank the teams by predicted scores
+#' @export rank_scores
+#' @importFrom dplyr %>%
+#' @importFrom dplyr desc
+#' @param aug_schedule an augmented schedule from tidy_game_predict
+#' @param team_mean the mean team score of all input games
+#' @param team_sd the sd of the team scores of all input games
+#' @return the teams ranked by ascending scores
+
+rank_scores <- function(aug_schedule, team_mean, team_sd) {
+  return(dplyr::bind_rows(
+    dplyr::select(
+      aug_schedule,
+      team = away,
+      opponent = home,
+      score_p = away_score_p,
+      total_p,
+      home_mov_p,
+      mov_z) %>%
+    dplyr::mutate(
+      score_z = (score_p - team_mean) / team_sd,
+      venue = "R"),
+    dplyr::select(
+      aug_schedule,
+      team = home,
+      opponent = away,
+      score_p = home_score_p,
+      total_p,
+      home_mov_p,
+      mov_z) %>%
+    dplyr::mutate(
+      score_z = (score_p - team_mean) / team_sd,
+      venue = "H")) %>%
+    dplyr::arrange(desc(score_p)))
+}
+
+#' @title Build model
+#' @name build_model
+#' @description runs mvglmmRank::mvglmmRank against a game box score and points function
+#' @export build_model
+#' @importFrom dplyr %>%
+#' @param game_data a game.data input file
+#' @param method method to be passed to mvglmmRank - default is "N"
+#' @param first.order flag to be passed to mvglmmRank - default is TRUE
+#' @return an mvglmmRank model object
+
+build_model <- function(game_data, method = "N", first.order = TRUE) {
+  return(mvglmmRank::mvglmmRank(
+    game_data,
+    method = method,
+    first.order = first.order,
+    OT.flag = TRUE,
+    verbose = FALSE))
+}
+
+#' @title Collect game data
+#' @name game_data
+#' @description creates an input game data file for mvglmmRank
+#' @export game_data
+#' @importFrom dplyr %>%
+#' @param gbs game box score data frame
+#' @param pfunc a function mapping a box score data frame to a points vector, usually either real_points, draftkings_points, fanduel_points or yahoo_points
+#' @param end_date the latest date to use as input
+#' @return a game data dataframe
+
+game_data <- function(gbs, pfunc, end_date) {
+
+  # compute POINTS and OT columns
+  pmg <- 240 # player-minutes per game
+  pmo <- 25 # player-minutes per overtime
+  df <- gbs
+  df$POINTS <- pfunc(gbs)
+  df$OT <- (round(gbs$MIN, 0) - pmg) / pmo
+  df <- dplyr::filter(df, DATE <= lubridate::ymd(end_date))
+
+  # break out home and away data frames
+  home.df <- dplyr::filter(df, `VENUE (R/H)` == "H")
+  away.df <- dplyr::filter(df, `VENUE (R/H)` == "R")
+  home.df <- dplyr::transmute(
+    home.df,
+    date = DATE,
+    away = `OPP TEAM`,
+    home = `OWN TEAM`,
+    home.response = POINTS)
+  away.df <- dplyr::transmute(
+    away.df,
+    date = DATE,
+    away = `OWN TEAM`,
+    home = `OPP TEAM`,
+    away.response = POINTS,
+    OT = OT)
+  joined.df <- dplyr::full_join(away.df, home.df) %>%
+    dplyr::mutate(
+      total = home.response + away.response,
+      home_mov = home.response - away.response) %>%
+    dplyr::arrange(date)
+
+    return(as.data.frame(joined.df))
+}
