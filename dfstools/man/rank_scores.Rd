@@ -4,14 +4,10 @@
 \alias{rank_scores}
 \title{Rank predicted scores}
 \usage{
-rank_scores(aug_schedule, team_mean, team_sd)
+rank_scores(aug_schedule)
 }
 \arguments{
 \item{aug_schedule}{an augmented schedule from tidy_game_predict}
-
-\item{team_mean}{the mean team score of all input games}
-
-\item{team_sd}{the sd of the team scores of all input games}
 }
 \value{
 the teams ranked by ascending scores

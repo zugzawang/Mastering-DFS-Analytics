@@ -76,11 +76,9 @@ game_predict <-
 #' @export rank_scores
 #' @importFrom dplyr %>%
 #' @param aug_schedule an augmented schedule from tidy_game_predict
-#' @param team_mean the mean team score of all input games
-#' @param team_sd the sd of the team scores of all input games
 #' @return the teams ranked by ascending scores
 
-rank_scores <- function(aug_schedule, team_mean, team_sd) {
+rank_scores <- function(aug_schedule) {
   return(dplyr::bind_rows(
     dplyr::select(
       aug_schedule,
@@ -88,22 +86,15 @@ rank_scores <- function(aug_schedule, team_mean, team_sd) {
       opponent = home,
       score_p = away_score_p,
       total_p,
-      home_mov_p,
-      mov_z) %>%
-    dplyr::mutate(
-      score_z = (score_p - team_mean) / team_sd,
-      venue = "R"),
+      home_mov_p),
     dplyr::select(
       aug_schedule,
       team = home,
       opponent = away,
       score_p = home_score_p,
       total_p,
-      home_mov_p,
-      mov_z) %>%
-    dplyr::mutate(
-      score_z = (score_p - team_mean) / team_sd,
-      venue = "H")) %>%
+      home_mov_p)
+    ) %>%
     dplyr::arrange(dplyr::desc(score_p)))
 }
 
