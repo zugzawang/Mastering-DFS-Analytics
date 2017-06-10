@@ -147,7 +147,7 @@ points_model <- glm(
   data = projection_input,
   family = quasipoisson)
 points_tidy <- tidy(points_model) %>%
-  filter(p.value <= 0.1) %>%
+  filter(p.value <= 0.05) %>%
   arrange(desc(estimate))
 View(points_tidy)
 
@@ -156,7 +156,7 @@ minutes_model <- glm(
   data = projection_input,
   family = quasipoisson)
 minutes_tidy <- tidy(minutes_model) %>%
-  filter(p.value <= 0.1) %>%
+  filter(p.value <= 0.05) %>%
   arrange(desc(estimate))
 View(minutes_tidy)
 ```
