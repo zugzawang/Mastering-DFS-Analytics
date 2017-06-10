@@ -158,7 +158,6 @@ playerboxscore <- function(spreadsheet, sheet_number = 1) {
 #' }
 
 gameboxscore <- function(pbs) {
-  columns <- 8:25
   df <- pbs %>% dplyr::group_by(
     data_set,
     date,
@@ -167,6 +166,7 @@ gameboxscore <- function(pbs) {
     venue_r_h
   ) %>%
     dplyr::summarize_if(is.numeric, sum, na.rm = TRUE) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    dplyr::select(-games)
   return(as.data.frame(df))
 }
