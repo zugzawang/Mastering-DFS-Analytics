@@ -121,6 +121,12 @@ playerboxscore <- function(spreadsheet, sheet_number = 1) {
     dplyr::filter(!is.na("DATE"))
   colnames(df) <- .sensible_column_names(df)
 
+  # enforce venue code consistency
+  rx <- df$venue_r_h == "Road"
+  df$venue_r_h[rx] <- "R"
+  hx <- df$venue_r_h == "Home"
+  df$venue_r_h[hx] <- "H"
+
   # comparable date stamp
   df$date <- lubridate::mdy(df$date)
 
