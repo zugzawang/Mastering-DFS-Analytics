@@ -3,7 +3,6 @@
 #' @description Creates a data frame with game predictions
 #' @export game_predict
 #' @importFrom dplyr %>%
-#' @importFrom stats pnorm
 #' @param model a model from mvglmmRank::mvglmmRank
 #' @param schedule a data frame team names in "away" and "home" columns
 #' @return the schedule augmented with prediction columns
@@ -55,7 +54,7 @@ game_predict <-
     aug_schedule <- dplyr::mutate(
       aug_schedule,
       home_prob_w =
-        pnorm(
+        stats::pnorm(
           model$b.mean +
           model$b.ratings[home] -
           model$b.ratings[away]))
@@ -76,7 +75,6 @@ game_predict <-
 #' @description rank the teams by predicted scores
 #' @export rank_scores
 #' @importFrom dplyr %>%
-#' @importFrom dplyr desc
 #' @param aug_schedule an augmented schedule from tidy_game_predict
 #' @param team_mean the mean team score of all input games
 #' @param team_sd the sd of the team scores of all input games
@@ -106,7 +104,7 @@ rank_scores <- function(aug_schedule, team_mean, team_sd) {
     dplyr::mutate(
       score_z = (score_p - team_mean) / team_sd,
       venue = "H")) %>%
-    dplyr::arrange(desc(score_p)))
+    dplyr::arrange(dplyr::desc(score_p)))
 }
 
 #' @title Build model
@@ -140,29 +138,29 @@ build_model <- function(game_data, method = "N", first.order = TRUE) {
 
 game_data <- function(gbs, pfunc, end_date) {
 
-  # compute POINTS and OT columns
+  # compute points and OT columns
   pmg <- 240 # player-minutes per game
   pmo <- 25 # player-minutes per overtime
   df <- gbs
-  df$POINTS <- pfunc(gbs)
+  df$points <- pfunc(gbs)
   df$OT <- (round(gbs$MIN, 0) - pmg) / pmo
-  df <- dplyr::filter(df, DATE <= lubridate::ymd(end_date))
+  df <- dplyr::filter(df, date <= lubridate::ymd(end_date))
 
   # break out home and away data frames
-  home.df <- dplyr::filter(df, `VENUE (R/H)` == "H")
-  away.df <- dplyr::filter(df, `VENUE (R/H)` == "R")
+  home.df <- dplyr::filter(df, venue_r_h == "H")
+  away.df <- dplyr::filter(df, venue_r_h == "R")
   home.df <- dplyr::transmute(
     home.df,
-    date = DATE,
-    away = `OPP TEAM`,
-    home = `OWN TEAM`,
-    home.response = POINTS)
+    date = date,
+    away = opp_team,
+    home = own_team,
+    home.response = points)
   away.df <- dplyr::transmute(
     away.df,
-    date = DATE,
-    away = `OWN TEAM`,
-    home = `OPP TEAM`,
-    away.response = POINTS,
+    date = date,
+    away = own_team,
+    home = opp_team,
+    away.response = points,
     OT = OT)
   joined.df <- dplyr::full_join(away.df, home.df) %>%
     dplyr::mutate(
