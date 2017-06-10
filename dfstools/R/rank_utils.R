@@ -117,13 +117,14 @@ rank_scores <- function(aug_schedule, team_mean, team_sd) {
 #' @param first.order flag to be passed to mvglmmRank - default is TRUE
 #' @return an mvglmmRank model object
 
-build_model <- function(game_data, method = "N", first.order = TRUE) {
-  return(mvglmmRank::mvglmmRank(
+build_model <- function(game_data, method = "PB1", first.order = TRUE) {
+  result <- mvglmmRank::mvglmmRank(
     game_data,
     method = method,
     first.order = first.order,
     OT.flag = TRUE,
-    verbose = FALSE))
+    verbose = FALSE)
+  return(result)
 }
 
 #' @title Collect game data
@@ -141,7 +142,7 @@ collect_game_data <- function(gbs, pmg, end_date) {
   # compute points and OT columns
   pmo <- 25 # player-minutes per overtime
   df <- gbs
-  df$ot <- (round(gbs$min, 0) - pmg) / pmo
+  df$OT <- (round(gbs$min, 0) - pmg) / pmo
   df <- dplyr::filter(df, date <= lubridate::ymd(end_date))
 
   # break out home and away data frames
@@ -159,12 +160,13 @@ collect_game_data <- function(gbs, pmg, end_date) {
     away = own_team,
     home = opp_team,
     away.response = pts,
-    ot = ot)
+    OT = OT)
   joined.df <- dplyr::full_join(away.df, home.df) %>%
     dplyr::mutate(
       total = home.response + away.response,
       home_mov = home.response - away.response) %>%
     dplyr::arrange(date)
+  joined.df$date <- as.character(joined.df$date)
 
-    return(as.data.frame(joined.df))
+    return(joined.df)
 }

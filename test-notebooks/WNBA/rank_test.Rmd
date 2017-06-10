@@ -28,14 +28,22 @@ library(readr)
 playerbox <- playerboxscore(
   "~/Dropbox/wnba-season-player-feed-06-07-2017.xlsx"
 )
-View(playerbox)
 gamebox <- gameboxscore(playerbox)
-View(gamebox)
 ```
 
 ## Collect model input
 ```{r}
 game_data <- collect_game_data(gamebox, 200, '2017-06-09')
-View(game_data)
 ```
+
+## Build model
+```{r}
+season_model <- build_model(game_data)
+```
+
+## Back-predict for a test
+```{r}
+back_prediction <- game_predict(season_model, game_data)
+```
+
 
