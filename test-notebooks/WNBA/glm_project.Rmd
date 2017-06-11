@@ -10,11 +10,11 @@ editor_options:
 
 ## Build model
 ```{r}
-library(tidyverse)
-library(broom)
+model_input <- playerbox %>% filter(fdfp >= 0)
 glm_model <- glm(
   fdfp ~ player_full_name + opp_team + venue_r_h,
-  data = playerbox
+  data = model_input,
+  family = quasipoisson
 )
 glm_tidy <- broom::tidy(glm_model) %>% 
   dplyr::filter(p.value <= 0.05) %>%

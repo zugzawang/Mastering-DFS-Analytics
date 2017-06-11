@@ -18,6 +18,7 @@ library(MASS)
 library(dfstools)
 library(tidyverse)
 library(stringr)
+library(broom)
 
 decoder <- tribble(
   ~fanduel, ~bigdataball,
@@ -39,7 +40,7 @@ decoder <- tribble(
 ## Get data
 ```{r}
 playerbox <- playerboxscore(
-    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-09-2017.xlsx"
+    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-10-2017.xlsx"
 )
 gamebox <- gameboxscore(playerbox)
 salaries <- read_csv(

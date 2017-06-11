@@ -8,32 +8,9 @@ editor_options:
   chunk_output_type: inline
 ---
 
-## Libraries
-```{r message=FALSE}
-# devtools::install(
-#   "~/Projects/Mastering-DFS-Analytics/dfstools/",
-#   build_vignettes = TRUE
-# )
-library(dfstools)
-library(archetypes)
-library(DT)
-library(tibble)
-library(dplyr)
-library(ggtern)
-library(readr)
-```
-
-## Get data
-```{r}
-playerbox <- playerboxscore(
-    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-09-2017.xlsx"
-)
-gamebox <- gameboxscore(playerbox)
-```
-
 ## Collect model input
 ```{r}
-game_data <- collect_game_data(gamebox, 200, '2017-06-09')
+game_data <- collect_game_data(gamebox, 200, '2017-06-10')
 ```
 
 ## Build model
