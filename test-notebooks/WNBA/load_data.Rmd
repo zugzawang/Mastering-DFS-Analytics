@@ -1,0 +1,62 @@
+---
+title: "Data Loader"
+output:
+  html_notebook: 
+    theme: readable
+  html_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+## Libraries
+```{r message=FALSE}
+# devtools::install(
+#   "~/Projects/Mastering-DFS-Analytics/dfstools/",
+#   build_vignettes = TRUE
+# )
+library(dfstools)
+library(tidyverse)
+library(stringr)
+```
+
+## Get data
+```{r}
+playerbox <- playerboxscore(
+    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-09-2017.xlsx"
+)
+View(playerbox)
+gamebox <- gameboxscore(playerbox)
+View(gamebox)
+salaries <- read_csv(
+  "/home/Projects/draftkings/contest-standings/wnba/20170611/FanDuel-WNBA-2017-06-11-19683-players-list.csv",
+  col_types = cols(
+    X14 = col_skip(),
+    X15 = col_skip()
+  )
+)
+View(salaries)
+decoder <- tribble(
+  ~fanduel, ~bigdataball,
+  "MIN", "Minnesota",
+  "DAL", "Dallas",
+  "WAS", "Washington",
+  "SEA", "Seattle",
+  "NY", "New York",
+  "IND", "Indiana",
+  "PHO", "Phoenix",
+  "LA", "Los Angeles",
+  "ATL", "Atlanta",
+  "CON", "Connecticut",
+  "CHI", "Chicago",
+  "SA", "San Antonio"
+)
+View(decoder)
+games <- salaries$Game %>%
+  unique() %>%
+  str_split_fixed(pattern = "@", n = 2) %>%
+  as_tibble() %>%
+  left_join(decoder, by = c("V1" = "fanduel")) %>%
+  left_join(decoder, by = c("V2" = "fanduel")) %>%
+  select(away = bigdataball.x, home = bigdataball.y)
+View(games)
+```
