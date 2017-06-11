@@ -26,28 +26,6 @@ backp_score_table <- rank_scores(back_prediction)
 
 ## get the new rows
 ```{r}
-salaries <- read_csv(
-  "/home/Projects/draftkings/contest-standings/wnba/20170611/FanDuel-WNBA-2017-06-11-19683-players-list.csv",
-  col_types = cols(
-    X14 = col_skip(),
-    X15 = col_skip()
-  )
-)
-decoder <- tribble(
-  ~fanduel, ~bigdataball,
-  "MIN", "Minnesota",
-  "DAL", "Dallas",
-  "WAS", "Washington",
-  "SEA", "Seattle",
-  "NY", "New York",
-  "IND", "Indiana",
-  "PHO", "Phoenix",
-  "LA", "Los Angeles",
-  "ATL", "Atlanta",
-  "CON", "Connecticut",
-  "CHI", "Chicago",
-  "SA", "San Antonio"
-)
 new_rows <- salaries$Game %>%
   unique() %>%
   stringr::str_split_fixed(pattern = "@", n = 2) %>%
