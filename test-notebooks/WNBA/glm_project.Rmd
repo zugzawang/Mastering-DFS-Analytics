@@ -1,0 +1,45 @@
+---
+title: "GLM Projections"
+output:
+  html_notebook: 
+    theme: readable
+  html_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+## Build model
+```{r}
+library(tidyverse)
+library(broom)
+glm_model <- glm(
+  fdfp ~ player_full_name + opp_team + venue_r_h,
+  data = playerbox
+)
+glm_tidy <- broom::tidy(glm_model) %>% 
+  dplyr::filter(p.value <= 0.05) %>%
+  dplyr::arrange(desc(estimate))
+```
+
+## Run the predictions
+```{r}
+aug_salaries <- salaries %>%
+  filter(
+    Nickname != "Aerial Powers",
+    Nickname != "Amanda Zahui B.",
+    Nickname != "Nadia Colhado"
+  ) %>%
+  left_join(decoder, by = c("Team" = "fanduel")) %>%
+  left_join(decoder, by = c("Opponent" = "fanduel")) %>%
+  rename(
+    player_full_name = Nickname,
+    own_team = bigdataball.x,
+    opp_team = bigdataball.y,
+    venue_r_h = Venue)
+aug_salaries <- aug_salaries %>%
+  mutate(
+    projection = predict(glm_model, newdata = aug_salaries, type = "response"),
+    value = 1000 * projection / Salary,
+    delta = projection - FPPG
+  )
+```
