@@ -9,7 +9,13 @@ editor_options:
 ---
 ## Run model
 ```{r message=FALSE, error=FALSE, warning=FALSE}
-arch_search <- archetype_search(playerbox)
+cleaned_playerbox <- playerbox %>% filter(
+  fdfp >= 0,
+  dkfp >= 0,
+  yfp >=0,
+  min > 0
+)
+arch_search <- archetype_search(cleaned_playerbox)
 screeplot(arch_search$arch_results)
 ```
 
@@ -54,43 +60,36 @@ datatable(archetype_table, rownames = FALSE, filter = "top")
 ```{r}
 pbs_summary <- arch_search$arch_input$pbs_summary %>%
   as_tibble() %>%
-  mutate(fdfp_per_g = round(fdfp / games, 2))
+  mutate(fdfp_per_min = round(fdfp / min, 2))
 fantasy_points <- pbs_summary %>%
   as_tibble() %>%
-  select(fdfp:fdfp_per_g)
+  select(fdfp, min, fdfp_per_min)
 player_table <- bind_cols(
   arch_search$arch_input$current_team,
-  coefficients(best_model, "alphas") %>% round(3) %>% as_tibble(),
+  coefficients(best_model, "alphas") %>% round(2) %>% as_tibble(),
   fantasy_points
 ) %>%
   arrange(desc(fdfp))
 colnames(player_table)[1:3] <- c("Player", "Position", "Team")
 colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
+player_table$min <- round(player_table$min, 1)
 datatable(player_table, rownames = FALSE, filter = "top")
 ```
-## Player clusters
+## Top Ten
 ```{r}
-front_back_cluster <- mixmodCluster(
-  dplyr::select(player_table, Front, Back, fdfp_per_g), 1:12
-)
-plot(front_back_cluster)
-front_back_model <- glm(
-  fdfp_per_g ~ Front + Back, 
-  data = (player_table %>% filter(Bench < 0.5)),
-  family = quasipoisson
-)
-summary(front_back_model)
-print(anova(front_back_model))
-bench_cluster <- mixmodCluster(
-  dplyr::select(player_table, Bench, fdfp_per_g) %>% 
-    dplyr::filter(fdfp_per_g > 5), 1:12)
-plot(bench_cluster)
+plot <- ternary_plot(
+  player_table = player_table %>% top_n(10, fdfp), 
+  plot_title = "WNBA Top Ten")
+print(plot)
+filename <- "top_ten.pdf"
+ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
 ```
+
 ## Generate team plots
 ```{r}
 for (t in player_table$Team %>% unique()) {
   team_data <- player_table %>% 
-    filter(Team == t) %>% top_n(12, fdfp)
+    filter(Team == t) %>% top_n(10, fdfp)
   plot <- ternary_plot(
     player_table = team_data, 
     plot_title = t)
@@ -99,29 +98,3 @@ for (t in player_table$Team %>% unique()) {
   ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
 }
 ```
-## Projection model
-```{r}
-projection_input <- playerbox %>%
-  full_join(
-    {player_table %>% select(Player, Bench, Back, Front, games)},
-    by = c("player_full_name" = "Player")) %>%
-  filter(fdfp >= 0) %>%
-  select(date:min, fdfp, Bench:Front, games = games.y)
-
-points_model <- glm(
-  fdfp ~ player_full_name + opp_team + venue_r_h,
-  data = projection_input,
-  family = quasipoisson)
-points_tidy <- tidy(points_model) %>%
-  filter(p.value <= 0.05) %>%
-  arrange(desc(estimate))
-View(points_tidy)
-
-minutes_model <- glm(
-  min ~ player_full_name + opp_team + venue_r_h,
-  data = projection_input,
-  family = quasipoisson)
-minutes_tidy <- tidy(minutes_model) %>%
-  filter(p.value <= 0.05) %>%
-  arrange(desc(estimate))
-View(minutes_tidy)
