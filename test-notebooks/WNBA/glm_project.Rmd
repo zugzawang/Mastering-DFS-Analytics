@@ -24,11 +24,7 @@ glm_tidy <- broom::tidy(glm_model) %>%
 ## Run the predictions
 ```{r}
 aug_salaries <- salaries %>%
-  filter(
-    Nickname != "Aerial Powers",
-    Nickname != "Amanda Zahui B.",
-    Nickname != "Nadia Colhado"
-  ) %>%
+  semi_join(playerbox, by = c("Nickname" = "player_full_name")) %>%
   left_join(decoder, by = c("Team" = "fanduel")) %>%
   left_join(decoder, by = c("Opponent" = "fanduel")) %>%
   rename(
@@ -38,8 +34,8 @@ aug_salaries <- salaries %>%
     venue_r_h = Venue)
 aug_salaries <- aug_salaries %>%
   mutate(
-    projection = predict(glm_model, newdata = aug_salaries, type = "response"),
-    value = 1000 * projection / Salary,
-    delta = projection - FPPG
+    projection = round(predict(glm_model, newdata = aug_salaries, type = "response"), 2),
+    value = round(1000 * projection / Salary, 2),
+    delta = round(projection - FPPG, 2)
   )
 ```
