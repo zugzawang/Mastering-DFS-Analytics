@@ -86,17 +86,23 @@ archetype_search <- function(pbs) {
 ternary_plot <- function(player_table, plot_title) {
 
   # colour-blind-friendly palette
-  cbPalette <- RColorBrewer::brewer.pal(n = 12, name = "Paired")
+  cbPalette <- c(
+    RColorBrewer::brewer.pal(n = 8, name = "Dark2"),
+    RColorBrewer::brewer.pal(n = 8, name = "Dark2")
+  )
   xdata <- dplyr::mutate(
     player_table,
-    `Player/Position` = paste(Player, Position, sep = "/"))
+    `Player/Position` = paste(Player, Position, sep = "/")) %>%
+    dplyr::arrange(Bench)
+  xdata$`Player/Position` <- forcats::as_factor(xdata$`Player/Position`)
   plot_object <- ggtern(
     data = xdata, mapping =
       aes(x = Front, y = Back, z = Bench)) +
     geom_point(
-      aes(colour = `Player/Position`, shape = `Position`), size = 5) +
+      aes(shape = `Player/Position`, colour = `Player/Position`), size = 7.5) +
     theme_nomask() +
     scale_colour_manual(values = cbPalette) +
+    scale_shape_manual(values = c(1:12)) +
     ggtitle(plot_title) +
     Tlab("Back") +
     Llab("Front")
