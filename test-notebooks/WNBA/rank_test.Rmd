@@ -10,7 +10,7 @@ editor_options:
 
 ## Collect model input
 ```{r}
-game_data <- collect_game_data(gamebox, 200, '2017-06-10')
+game_data <- collect_game_data(gamebox, 200, '2017-06-11')
 ```
 
 ## Build model
@@ -26,15 +26,6 @@ backp_score_table <- rank_scores(back_prediction)
 
 ## get the new rows
 ```{r}
-new_rows <- salaries$Game %>%
-  unique() %>%
-  stringr::str_split_fixed(pattern = "@", n = 2) %>%
-  as_tibble() %>%
-  left_join(decoder, by = c("V1" = "fanduel")) %>%
-  left_join(decoder, by = c("V2" = "fanduel")) %>%
-  select(away = bigdataball.x, home = bigdataball.y)
-prediction <- game_predict(season_model, new_rows)
-View(prediction)
+prediction <- game_predict(season_model, games)
 score_table <- rank_scores(prediction)
-View(score_table)
 ```
