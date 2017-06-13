@@ -68,17 +68,6 @@ colnames(player_table)[1:3] <- c("Player", "Position", "Team")
 colnames(player_table)[4:6] <- colnames(archetype_table)[2:4]
 datatable(player_table, rownames = FALSE, filter = "top")
 ```
-## Top Twelve
-```{r}
-top_twelve <- player_table %>% 
-  top_n(12, fdfp_per_g)
-plot <- ternary_plot(
-  player_table = top_twelve, 
-  plot_title = "WNBA Top Twelve")
-print(plot)
-filename <- "top_twelve.pdf"
-ggtern::ggsave(filename, width = 11, height = 8.5, units = "in")
-```
 ## Player clusters
 ```{r}
 front_back_cluster <- mixmodCluster(
@@ -136,4 +125,3 @@ minutes_tidy <- tidy(minutes_model) %>%
   filter(p.value <= 0.05) %>%
   arrange(desc(estimate))
 View(minutes_tidy)
-```
