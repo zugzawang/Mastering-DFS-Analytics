@@ -22,4 +22,5 @@ Imports: archetypes,
     DT,
     knitr,
     rmarkdown,
-    mvglmmRank
+    mvglmmRank,
+    Rmixmod

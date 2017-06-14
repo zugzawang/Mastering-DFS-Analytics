@@ -23,7 +23,9 @@ glm_tidy <- broom::tidy(glm_model) %>%
 
 ## Run the predictions
 ```{r}
-aug_salaries <- salaries %>%
+missing <- salaries %>% 
+  anti_join(playerbox, by = c("Nickname" = "player_full_name"))
+aug_salaries <- salaries %>% 
   semi_join(playerbox, by = c("Nickname" = "player_full_name")) %>%
   left_join(decoder, by = c("Team" = "fanduel")) %>%
   left_join(decoder, by = c("Opponent" = "fanduel")) %>%
