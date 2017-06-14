@@ -23,4 +23,7 @@ Imports: archetypes,
     knitr,
     rmarkdown,
     mvglmmRank,
-    Rmixmod
+    Rmixmod,
+    formatR,
+    tidyverse,
+    forcats
