@@ -1,0 +1,25 @@
+---
+title: "FanDuel History"
+output: html_notebook
+---
+```{r}
+library(readr)
+library(dplyr)
+fanduel_entry_history <- read_csv(
+  "/home/Projects/draftkings/contest-standings/fanduel-entry-history.csv",
+  col_types = cols(
+    Link = col_skip(), 
+    SalaryCap = col_number(),
+    Position = col_number(),
+    Entries = col_number(),
+    `Winnings ($)` = col_number()
+  )
+) %>%
+  filter(!is.na(Score)) %>%
+  mutate(Qrank = 1 - (Position - 1) / (Entries - 1))
+View(fanduel_entry_history)
+wnba <- fanduel_entry_history %>% filter(Sport == "wnba")
+View(wnba)
+
+```
+
