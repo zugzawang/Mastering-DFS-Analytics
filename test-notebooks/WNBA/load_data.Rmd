@@ -36,7 +36,7 @@ decoder <- tribble(
 ## Get data
 ```{r}
 playerbox <- playerboxscore(
-    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-16-2017.xlsx"
+    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-17-2017.xlsx"
 )
 gamebox <- gameboxscore(playerbox)
 salaries <- read_csv(
