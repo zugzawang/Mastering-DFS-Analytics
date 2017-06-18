@@ -36,11 +36,11 @@ decoder <- tribble(
 ## Get data
 ```{r}
 playerbox <- playerboxscore(
-    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-13-2017.xlsx"
+    "~/Dropbox/17-wnba-player/wnba-season-player-feed-06-16-2017.xlsx"
 )
 gamebox <- gameboxscore(playerbox)
 salaries <- read_csv(
-  "/home/Projects/draftkings/contest-standings/wnba/20170614/FanDuel-WNBA-2017-06-14-19696-players-list.csv",
+  "/home/Projects/draftkings/contest-standings/wnba/20170618/FanDuel-WNBA-2017-06-18-19747-players-list.csv",
   col_types = cols(
     X14 = col_skip(),
     X15 = col_skip()

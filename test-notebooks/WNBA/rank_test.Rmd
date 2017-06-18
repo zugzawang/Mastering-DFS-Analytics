@@ -10,7 +10,7 @@ editor_options:
 
 ## Collect model input
 ```{r}
-game_data <- collect_game_data(gamebox, 200, '2017-06-13')
+game_data <- collect_game_data(gamebox, 200, '2017-06-16')
 ```
 
 ## Build model
