@@ -39,5 +39,6 @@ aug_salaries <- aug_salaries %>%
     projection = round(predict(glm_model, newdata = aug_salaries, type = "response"), 2),
     value = round(1000 * projection / Salary, 2),
     delta = round(projection - FPPG, 2)
-  )
+  ) %>%
+  arrange(desc(value))
 ```
