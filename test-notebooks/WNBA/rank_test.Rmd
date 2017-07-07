@@ -28,4 +28,6 @@ backp_score_table <- rank_scores(back_prediction)
 ```{r}
 prediction <- game_predict(season_model, games)
 score_table <- rank_scores(prediction)
+View(prediction)
+View(score_table)
 ```

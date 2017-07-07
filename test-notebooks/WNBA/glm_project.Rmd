@@ -40,5 +40,8 @@ aug_salaries <- aug_salaries %>%
     value = round(1000 * projection / Salary, 2),
     delta = round(projection - FPPG, 2)
   ) %>%
-  arrange(desc(value))
+  arrange(desc(delta)) %>%
+  filter(value > median(value)) %>%
+  filter(delta > median(delta))
+View(aug_salaries)
 ```
