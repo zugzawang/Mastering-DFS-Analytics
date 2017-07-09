@@ -8,34 +8,24 @@ editor_options:
   chunk_output_type: inline
 ---
 
-## Build models
+## Build model
 ```{r}
-model_input <- playerbox %>% filter(fdfp >= 0, dkfp > 0)
-fd_glm_model <- glm(
+model_input <- playerbox %>% filter(fdfp >= 0)
+glm_model <- glm(
   fdfp ~ player_full_name + opp_team + venue_r_h,
   data = model_input,
   family = quasipoisson
 )
-fd_glm_tidy <- broom::tidy(fd_glm_model) %>% 
-  dplyr::filter(p.value <= 0.05) %>%
-  dplyr::arrange(desc(estimate))
-
-dk_glm_model <- glm(
-  dkfp ~ player_full_name + opp_team + venue_r_h,
-  data = model_input,
-  family = quasipoisson
-)
-dk_glm_tidy <- broom::tidy(dk_glm_model) %>% 
+glm_tidy <- broom::tidy(glm_model) %>% 
   dplyr::filter(p.value <= 0.05) %>%
   dplyr::arrange(desc(estimate))
 ```
 
 ## Run the predictions
 ```{r}
-missing <- salaries %>% 
+fd_missing <- fd_salaries %>% 
   anti_join(playerbox, by = c("Nickname" = "player_full_name"))
-
-aug_salaries <- salaries %>% 
+aug_fd_salaries <- fd_salaries %>% 
   semi_join(playerbox, by = c("Nickname" = "player_full_name")) %>%
   left_join(decoder, by = c("Team" = "fanduel")) %>%
   left_join(decoder, by = c("Opponent" = "fanduel")) %>%
@@ -44,12 +34,12 @@ aug_salaries <- salaries %>%
     own_team = bigdataball.x,
     opp_team = bigdataball.y,
     venue_r_h = Venue)
-aug_salaries <- aug_salaries %>%
+aug_fd_salaries <- aug_fd_salaries %>%
   mutate(
-    projection = round(predict(fd_glm_model, newdata = aug_salaries, type = "response"), 2),
+    projection = round(predict(glm_model, newdata = aug_fd_salaries, type = "response"), 2),
     value = round(1000 * projection / Salary, 2),
     pct_delta = round(projection / FPPG - 1, 2)
   ) %>%
   arrange(desc(value))
-View(aug_salaries)
+View(aug_fd_salaries)
 ```
