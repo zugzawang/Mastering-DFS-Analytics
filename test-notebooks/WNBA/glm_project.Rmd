@@ -38,8 +38,8 @@ aug_fd_salaries <- aug_fd_salaries %>%
   mutate(
     projection = round(predict(glm_model, newdata = aug_fd_salaries, type = "response"), 2),
     value = round(1000 * projection / Salary, 2),
-    delta = round(projection - FPPG, 2)
+    pct_delta = round(projection / FPPG - 1, 2)
   ) %>%
-  arrange(desc(delta))
+  arrange(desc(value))
 View(aug_fd_salaries)
 ```
