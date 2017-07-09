@@ -55,7 +55,8 @@ dk_salaries <- read_csv(
   "/home/Projects/draftkings/contest-standings/nba/20170709/DKSalaries.csv") %>%
   select(Name, Salary, AvgPointsPerGame)
 salaries <- salaries %>%
-  full_join(dk_salaries, by = c("Nickname" = "Name"))
+  full_join(dk_salaries, by = c("Nickname" = "Name")) %>%
+  filter(!is.na(FPPG))
 
 games <- salaries$Game %>%
   unique() %>%
