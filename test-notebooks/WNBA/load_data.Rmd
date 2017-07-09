@@ -39,7 +39,7 @@ playerbox <- playerboxscore(
     "~/Dropbox/17-wnba-player/wnba-season-player-feed-07-08-2017.xlsx"
 )
 gamebox <- gameboxscore(playerbox)
-fd_salaries <- read_csv(
+salaries <- read_csv(
   "/home/Projects/draftkings/contest-standings/wnba/20170709/FanDuel-WNBA-2017-07-09-20028-players-list.csv",
   col_types = cols(
     X14 = col_skip(),
@@ -51,8 +51,13 @@ fd_salaries <- read_csv(
     Home = (Game %>% sub(pattern = "^.*@", replacement = "")),
     Venue = ifelse(Team == Road, "R", "H")
   )
+dk_salaries <- read_csv(
+  "/home/Projects/draftkings/contest-standings/nba/20170709/DKSalaries.csv") %>%
+  select(Name, Salary, AvgPointsPerGame)
+salaries <- salaries %>%
+  full_join(dk_salaries, by = c("Nickname" = "Name"))
 
-games <- fd_salaries$Game %>%
+games <- salaries$Game %>%
   unique() %>%
   str_split_fixed(pattern = "@", n = 2) %>%
   as_tibble() %>%
