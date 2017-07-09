@@ -44,3 +44,35 @@ aug_salaries <- aug_salaries %>%
   arrange(desc(value))
 View(aug_salaries)
 ```
+
+## DraftKings predictions
+```{r}
+dk_glm_model <- glm(
+  dkfp ~ player_full_name + opp_team + venue_r_h,
+  data = model_input,
+  family = quasipoisson
+)
+dk_glm_tidy <- broom::tidy(dk_glm_model) %>% 
+  dplyr::filter(p.value <= 0.05) %>%
+  dplyr::arrange(desc(estimate))
+aug_salaries <- aug_salaries %>%
+  mutate(
+    dk_projection = round(predict(
+      dk_glm_model, newdata = aug_salaries, type = "response"), 2),
+    dk_value = round(1000 * dk_projection / Salary.y, 2),
+    dk_pct_delta = round(dk_projection / AvgPointsPerGame - 1, 2)
+  ) %>%
+  arrange(desc(dk_value))
+dk_summary <- aug_salaries %>%
+  select(
+    player_full_name,
+    Played,
+    Salary.y,
+    AvgPointsPerGame,
+    dk_projection,
+    dk_value,
+    dk_pct_delta
+  )
+View(dk_summary)
+```
+
