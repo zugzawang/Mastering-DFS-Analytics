@@ -42,7 +42,18 @@ aug_salaries <- aug_salaries %>%
     pct_delta = round(projection / FPPG - 1, 2)
   ) %>%
   arrange(desc(value))
-View(aug_salaries)
+fd_summary <- aug_salaries %>%
+  select(
+    player_full_name,
+    Position,
+    Played,
+    Salary.x,
+    FPPG,
+    projection,
+    value,
+    pct_delta
+  )
+View(fd_summary)
 ```
 
 ## DraftKings predictions
@@ -66,6 +77,7 @@ aug_salaries <- aug_salaries %>%
 dk_summary <- aug_salaries %>%
   select(
     player_full_name,
+    Position,
     Played,
     Salary.y,
     AvgPointsPerGame,
