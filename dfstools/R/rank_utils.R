@@ -1,3 +1,15 @@
+## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "away",
+  "home",
+  "home_score_p",
+  "away_score_p",
+  "home_prob_w",
+  "away_prob_w",
+  "data_set",
+  "games"
+))
+
 #' @title Game predict
 #' @name game_predict
 #' @description Creates a data frame with game predictions
@@ -72,6 +84,15 @@ game_predict <-
   return(aug_schedule)
 }
 
+
+## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "home_mov_p",
+  "home_ratio_p",
+  "score_p",
+  "total_p"
+))
+
 #' @title Rank predicted scores
 #' @name rank_scores
 #' @description rank the teams by predicted scores
@@ -121,6 +142,16 @@ build_model <- function(game_data, method = "PB1", first.order = TRUE) {
     verbose = FALSE)
   return(result)
 }
+
+## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "venue_r_h",
+  "opp_team",
+  "pts",
+  "OT",
+  "home.response",
+  "away.response"
+))
 
 #' @title Collect game data
 #' @name game_data
