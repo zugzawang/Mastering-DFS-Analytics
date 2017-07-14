@@ -78,6 +78,7 @@ archetype_search <- function(pbs) {
 #' @import ggtern
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 scale_colour_manual
+#' @importFrom ggplot2 scale_shape_manual
 #' @importFrom ggplot2 ggtitle
 #' @param player_table a data frame with player archetype values
 #' @param plot_title the plot title
