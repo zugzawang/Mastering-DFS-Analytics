@@ -1,5 +1,3 @@
-.R*
-_book
-dfstools.*
-*.rds
+.Rhistory
 .Rproj.user
+.Rbuildignore
