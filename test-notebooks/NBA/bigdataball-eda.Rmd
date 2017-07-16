@@ -1,0 +1,76 @@
+---
+title: "Big Data Ball DFS History EDA"
+output:
+  html_notebook: default
+  html_document: default
+---
+
+## Introduction
+[BigDataBall](https://www.bigdataball.com/nba-historical-dfs-stats-singleseason/) recently started collecting daily fantasy sports (DFS) data for their NBA datasets. I'm a subscriber, so I signed up for their 2016-2017 historical dataset. What follows is some preliminary exploratory data analysis.
+
+## About the data
+First, we load the spreadsheet into a tibble:
+
+```{r warning=FALSE}
+library(tidyverse)
+library(readxl)
+nba_dfs_2016_2017 <- read_excel(
+  "~/SpiderOak Hive/NBA2016-2017/NBA-2016-2017-DFS-Dataset.xlsx",
+  col_names = FALSE,
+  skip = 2
+)
+colnames(nba_dfs_2016_2017) <- c(
+  "dataset",
+  "date",
+  "player",
+  "team",
+  "opponent",
+  "venue_r_h",
+  "minutes",
+  "usage_rate",
+  "dk_position",
+  "fd_position",
+  "y_position",
+  "dk_salary",
+  "fd_salary" ,
+  "y_salary",
+  "dkfp",
+  "fdfp",
+  "yfp")
+nba_dfs_2016_2017$y_salary <- as.numeric(nba_dfs_2016_2017$y_salary)
+nba_dfs_2016_2017 <- nba_dfs_2016_2017 %>% filter(
+  !is.na(dk_salary),
+  !is.na(fd_salary),
+  !is.na(y_salary),
+  !is.na(dkfp),
+  !is.na(fdfp),
+  !is.na(yfp),
+  !is.na(minutes),
+  !is.na(usage_rate)
+)
+nba_dfs_2016_2017
+```
+
+We have 17 columns. Most of the columns are self-explaining, but one may be new to people other than basketball analytics fans - "usage".
+
+## Outlier removal
+It turns out that there are some outliers in the usage calculation. Since usage has minutes played, a player who clocked a low number of minutes but ran up some points will have a high usage value. So I used a boxplot to find those outliers.
+```{r}
+boxplot_stats <- boxplot(nba_dfs_2016_2017$usage_rate)$stats
+nba_dfs_2016_2017 <- nba_dfs_2016_2017 %>% 
+  filter(usage_rate <= boxplot_stats[5, 1]) 
+```
+
+
+## Clustering
+The first step in my exploration process on a multivariate dataset like this one is clustering. There are a few ways to do this; it's a popular unsupervised learning technique to "let the data speak for themselves". My default clustering EDA library package is "Rmixmod".
+
+```{r}
+cluster_input <- nba_dfs_2016_2017 %>%
+  select(minutes, usage_rate, dk_salary, dkfp)
+library(Rmixmod)
+clusters <- mixmodCluster(cluster_input, nbCluster = 1:3)
+print(summary(clusters))
+plot(clusters, main = "DraftKings")
+```
+
