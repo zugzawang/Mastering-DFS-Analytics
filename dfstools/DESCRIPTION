@@ -25,4 +25,5 @@ Imports: archetypes,
     lubridate,
     readr,
     readxl,
-    tibble
+    tibble,
+    GGally
