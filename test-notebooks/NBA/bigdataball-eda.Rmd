@@ -51,26 +51,52 @@ nba_dfs_2016_2017 <- nba_dfs_2016_2017 %>% filter(
 nba_dfs_2016_2017
 ```
 
+## Usage
 We have 17 columns. Most of the columns are self-explaining, but one may be new to people other than basketball analytics fans - "usage".
 
-## Outlier removal
-It turns out that there are some outliers in the usage calculation. Since usage has minutes played, a player who clocked a low number of minutes but ran up some points will have a high usage value. So I used a boxplot to find those outliers.
-```{r}
-boxplot_stats <- boxplot(nba_dfs_2016_2017$usage_rate)$stats
-nba_dfs_2016_2017 <- nba_dfs_2016_2017 %>% 
-  filter(usage_rate <= boxplot_stats[5, 1]) 
+## Scatterplot matrix
+The first order of business in this exploration is to get a display of the characteristics of the numbers in this dataset. For this, we'll use a scatterplot matrix from the "GGally" package. To simplify matters, we'll only look at DraftKings DFS data.
+```{r fig.width=11, fig.height=8.5}
+library(GGally)
+ggpairs(
+  data = nba_dfs_2016_2017 %>% select(
+    dk_salary,
+    minutes, 
+    usage_rate,
+    dkfp
+  )
+)
 ```
 
+Notice that the "usage_rate" ranges from zero up to past 1500! The large values are clearly outliers. Where are they coming from?
+
+As you can see above, the formula for "usage_rate" has minutes played in the denominator. So if a player makes any signigicant contribution in a small time played, they'll have an unreasonable large usage rate.
+
+Notice also that there's an abnormally large spike in minutes around five. We want to filter these out as well as the large usage_rate values. So we'll remove all rows with less than ten minutes played.
+
+```{r fig.width=11, fig.height=8.5}
+no_outliers <- nba_dfs_2016_2017 %>% filter(
+  minutes >= 10
+)
+ggpairs(
+  data = no_outliers %>% select(
+    dk_salary,
+    minutes, 
+    usage_rate,
+    dkfp
+  )
+)
+```
 
 ## Clustering
 The first step in my exploration process on a multivariate dataset like this one is clustering. There are a few ways to do this; it's a popular unsupervised learning technique to "let the data speak for themselves". My default clustering EDA library package is "Rmixmod".
 
-```{r}
-cluster_input <- nba_dfs_2016_2017 %>%
+```{r fig.width=11, fig.height=8.5}
+cluster_input <- no_outliers %>%
   select(minutes, usage_rate, dk_salary, dkfp)
 library(Rmixmod)
-clusters <- mixmodCluster(cluster_input, nbCluster = 1:3)
+clusters <- mixmodCluster(cluster_input, nbCluster = 3)
 print(summary(clusters))
-plot(clusters, main = "DraftKings")
+plot(clusters)
 ```
 
