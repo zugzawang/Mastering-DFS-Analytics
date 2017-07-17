@@ -1,8 +1,8 @@
 ---
 title: "Big Data Ball DFS History EDA"
 output:
-  html_notebook: default
   html_document: default
+  html_notebook: default
 ---
 
 ## Introduction
