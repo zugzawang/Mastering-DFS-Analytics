@@ -11,6 +11,9 @@ editor_options:
 ```{r message=FALSE}
 library(MASS)
 library(dfstools)
+if (!require(tidyverse)) {
+  install.packages("tidyverse")
+}
 library(tidyverse)
 library(stringr)
 library(broom)
@@ -36,11 +39,11 @@ decoder <- tribble(
 ## Get data
 ```{r}
 playerbox <- playerboxscore(
-    "~/Dropbox/17-wnba-player/wnba-season-player-feed-07-09-2017.xlsx"
+    "~/Dropbox/17-wnba-player/wnba-season-player-feed-07-20-2017.xlsx"
 )
 gamebox <- gameboxscore(playerbox)
 salaries <- read_csv(
-  "/home/Projects/draftkings/contest-standings/wnba/20170712/FanDuel-WNBA-2017-07-12-20052-players-list.csv",
+  "/home/Projects/draftkings/contest-standings/wnba/20170725/FanDuel-WNBA-2017-07-25-20143-players-list.csv",
   col_types = cols(
     X14 = col_skip(),
     X15 = col_skip()
@@ -52,7 +55,7 @@ salaries <- read_csv(
     Venue = ifelse(Team == Road, "R", "H")
   )
 dk_salaries <- read_csv(
-  "/home/Projects/draftkings/contest-standings/nba/20170712/DKSalaries.csv") %>%
+  "/home/Projects/draftkings/contest-standings/nba/20170725/DKSalaries.csv") %>%
   select(Name, Salary, AvgPointsPerGame)
 salaries <- salaries %>%
   full_join(dk_salaries, by = c("Nickname" = "Name")) %>%
