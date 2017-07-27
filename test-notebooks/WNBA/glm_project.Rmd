@@ -41,7 +41,7 @@ aug_salaries <- aug_salaries %>%
     value = round(1000 * projection / Salary.x, 2),
     pct_delta = round(projection / FPPG - 1, 2)
   ) %>%
-  arrange(desc(value))
+  arrange(desc(projection))
 fd_summary <- aug_salaries %>%
   select(
     player_full_name,
@@ -73,7 +73,7 @@ aug_salaries <- aug_salaries %>%
     dk_value = round(1000 * dk_projection / Salary.y, 2),
     dk_pct_delta = round(dk_projection / AvgPointsPerGame - 1, 2)
   ) %>%
-  arrange(desc(dk_value))
+  arrange(desc(dk_projection))
 dk_summary <- aug_salaries %>%
   select(
     player_full_name,
